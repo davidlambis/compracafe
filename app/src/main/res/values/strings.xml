@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">ComprarCafe</string>
+    <string name="correo">Correo Electrónico</string>
+    <string name="contraseña">Contraseña</string>
+    <string name="iniciarSesion">Iniciar Sesión</string>
+    <string name="registrarse">Regístrate</string>
+    <string-array name="Tags">
+        <item>Inicio</item>
+        <item>Reportes</item>
+        <item>Cerrar Sesión</item>
+    </string-array>
+
+
+</resources>

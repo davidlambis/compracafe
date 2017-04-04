@@ -1,0 +1,121 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="1">
+
+        <!-- <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="Selecciona tu operación:"
+             android:layout_marginTop="12dp"
+             android:layout_marginLeft="5dp"/>
+
+          <Spinner
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:id="@+id/spinnerC">
+         </Spinner> -->
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+                <EditText android:id="@+id/edtNombreCliente"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:hint="Nombre del cliente"
+                    android:padding="8dp"
+                    android:background="#ffffff"
+                    android:drawablePadding="16dp"
+                    android:drawableLeft="@drawable/nombres"/>
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText android:id="@+id/edtCedulaCliente"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Cédula del cliente"
+                    android:padding="8dp"
+                    android:background="#ffffff"
+                    android:drawablePadding="16dp"
+                    android:drawableLeft="@drawable/cedula"/>
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText android:id="@+id/edtTelefonoCliente"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:hint="Teléfono del cliente"
+                    android:padding="8dp"
+                    android:background="#ffffff"
+                    android:drawablePadding="16dp"
+                    android:drawableLeft="@drawable/telefono"/>
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="El valor a pagar es de : $"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="5dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textStyle="bold"
+                android:id="@+id/tvValorAPagar"
+                android:layout_marginTop="10dp" />
+        </LinearLayout>
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnGenerarFactura"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginRight="5dp"
+            android:padding="6dp"
+            android:text="Generar Factura"
+            android:textColor="#ffffff"
+            android:background="@drawable/btnpresionadocalculos"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"/>
+
+    </LinearLayout>
+
+</ScrollView>

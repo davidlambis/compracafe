@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="center_horizontal"
+            android:text="LOGO"
+            android:id="@+id/tvIniciarSesion"
+            android:textSize="40dp"/>
+
+        <!-- Correo Electrónico -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+            <EditText android:id="@+id/edtCorreo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Correo Electrónico"
+                android:padding="8dp"
+                android:background="#ffffff"
+                android:drawableLeft="@drawable/correo"
+                android:drawablePadding="16dp"/>
+        </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
+        <!-- Contraseña -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+
+            <EditText android:id="@+id/edtContraseña"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="@string/contraseña"
+                android:padding="8dp"
+                android:background="#ffffff"
+                android:drawablePadding="16dp"
+                android:drawableLeft="@drawable/contrasena"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnIniciarSesion"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:text="@string/iniciarSesion"
+            android:textColor="#ffffff"
+            android:background="@drawable/btnpresionadologin"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:layout_below="@+id/btnIniciarSesion">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnRegistrarEmpresa"
+            android:layout_width="0.0dip" android:layout_height="40dp"
+            android:text="Registrar Empresa"
+            android:layout_weight="1.0"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/btnpresionadoempresa"
+            android:padding="3dp"
+            android:textColor="#ffffff"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"
+             />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnRegistrarUsuario"
+            android:layout_width="0.0dip" android:layout_height="40dp"
+            android:text="Registrar usuario"
+            android:layout_marginLeft="5dp"
+            android:padding="3dp"
+            android:layout_weight="1.0"
+            android:background="@drawable/btnpresionadoempresa"
+            android:textColor="#ffffff"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"
+             />
+
+    </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+
+
+</ScrollView>

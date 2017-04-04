@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/CoordinadorLayoutReportes"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <!-- Inicio de la Appbar -->
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/AppbarReportes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/MiTema.AppBarOverlay">
+
+        <!-- Inicio de la Toolbar-->
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/ToolbarReportes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <!-- Fin de la Toolbar-->
+
+    </android.support.design.widget.AppBarLayout>
+    <!-- Fin de la Appbar -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="24dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btnFecha"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/tvReporteFacturas"
+                android:layout_marginBottom="8dp"
+                android:padding="6dp"
+                android:text="Ingresar fecha"
+                android:textColor="#ffffff"
+                android:background="@drawable/btnpresionadocalculos"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnFecha"
+                android:id="@+id/tvFechaSeleccionada" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvFechaSeleccionada"
+                android:id="@+id/tvKilosTotales"
+                android:text=""/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvKilosTotales"
+                android:id="@+id/tvDineroGastado"
+                android:text=""/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDineroGastado"
+                android:id="@+id/tvPrueba"
+                android:text=""/>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/listview"
+                android:layout_below="@+id/tvDineroGastado">
+
+            </ListView>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</android.support.design.widget.CoordinatorLayout>
