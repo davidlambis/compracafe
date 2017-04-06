@@ -57,6 +57,7 @@
      <TextView
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
+         android:textColor="#9E9E9E"
          android:text="Nombres Usuario : "/>
 
     <TextView
@@ -74,6 +75,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#9E9E9E"
             android:text="Apellidos Usuario : "/>
 
         <TextView
@@ -91,6 +93,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#9E9E9E"
             android:text="Tipo de café : "/>
 
         <TextView
@@ -108,6 +111,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#9E9E9E"
             android:text="Kilos Totales : "/>
 
         <TextView
@@ -125,6 +129,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#9E9E9E"
             android:text="Valor Pagado : "/>
 
         <TextView
@@ -142,6 +147,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#9E9E9E"
             android:text="Fecha : "/>
 
         <TextView
@@ -159,6 +165,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#9E9E9E"
             android:text="Hora : "/>
 
         <TextView
@@ -176,6 +183,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#9E9E9E"
             android:text="Nombres Cliente : "/>
 
         <TextView
@@ -193,6 +201,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#9E9E9E"
             android:text="Cédula Cliente : "/>
 
         <TextView
@@ -210,6 +219,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="#9E9E9E"
             android:text="Teléfono Cliente : "/>
 
         <TextView

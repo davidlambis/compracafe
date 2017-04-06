@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.user.comprarcafe.Controllers.FacturasController;
+import com.example.user.comprarcafe.Handler.HttpHandler;
 import com.example.user.comprarcafe.Models.Factura;
 import com.example.user.comprarcafe.R;
 
@@ -31,6 +32,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +43,8 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -56,18 +61,25 @@ public class ReportesActivity extends AppCompatActivity {
     public long idEmpresa;
     public String nombreEmpresa,direccionEmpresa,telefonoEmpresa,nitEmpresa,nombresUsuario,apellidosUsuario,tipo,kilosTotales,valorPago,hora;
     TextView tvPrueba,tvKilosTotales,tvDineroGastado;
-    String fecha,nit,fecha1,a;
+    String fecha,nit,fecha1,a,strFormatvalorPagoSeco;
 
 
     Button btnFecha;
     TextView tvFechaSeleccionada;
-    int dia,mes,año;
+    int dia,mes,año , length;
 
     public ArrayList<Factura> listFactura;
 
     FacturasController db_facturas;
 
+    private static final String TAG = HttpHandler.class.getSimpleName();
+    private ProgressDialog pDialog;
+    private static String url = "http://iot.bitnamiapp.com:3000/factura_nit_fechaventa";
+    ListAdapter adapter;
+    ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
 
+    Double kilos = 0.0;
+    Double valorpago = 0.0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,9 +115,9 @@ public class ReportesActivity extends AppCompatActivity {
         btnFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //if(isOnlineNet()) {
+                if(isOnlineNet()) {
                     showDialog(111);
-                /*}else{
+                }else{
                     //Se muestra un alert dialog que indica que los datos son erróneos
                     final AlertDialog.Builder builder = new AlertDialog.Builder(ReportesActivity.this);
                     builder.setTitle("Alerta");
@@ -119,7 +131,7 @@ public class ReportesActivity extends AppCompatActivity {
 
                     AlertDialog dialog = builder.create();
                     dialog.show();
-                }*/
+                }
             }
         });
 
@@ -192,7 +204,14 @@ public class ReportesActivity extends AppCompatActivity {
     void mostrarFecha(){
         tvFechaSeleccionada.setText(fecha+" (Mes-Día-Año)");
         tvPrueba.setText("");
-        imprimirDatos();
+        //imprimirDatos();
+        makeServiceCallReportes(url);
+        if(list.size() > 0){
+            list.clear();
+        }
+        kilos = 0.0;
+        valorpago = 0.0;
+        new GetReportes().execute();
         //new CargarDatosHistoria().execute("http://iot.bitnamiapp.com:3000/factura_nit_fechaventa");
     }
 
@@ -214,7 +233,7 @@ public class ReportesActivity extends AppCompatActivity {
     }
 
     //SQLITE
-    public void imprimirDatos(){
+    /*public void imprimirDatos(){
         Double kilos = 0.0;
         Double valorpago = 0.0;
         listFactura = new ArrayList<Factura>();
@@ -262,8 +281,180 @@ public class ReportesActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
 
+    } */
+
+    private class GetReportes extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+            pDialog = new ProgressDialog(ReportesActivity.this);
+            pDialog.setMessage("Cargando...");
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            String jsonStr = makeServiceCallReportes(url);
+
+            if (jsonStr != null) {
+                try {
+                    JSONArray jsonArray = new JSONArray(jsonStr);
+                    length = jsonArray.length();
+                    List<String> listContents = new ArrayList<String>(length);
+
+                    int j = 0;
+                    for (int i = 0; i < length; i++)
+                    {
+                        listContents.add(jsonArray.getString(i));
+                        JSONObject c = jsonArray.getJSONObject(i);
+                        j = j +1 ;
+                        String nombreCompraventa = c.getString("Nombre_Compraventa");
+                        String nitCompraVenta = c.getString("Nit_Compraventa");
+                        String ciudadCompraVenta = c.getString("Ciudad");
+                        String direccionCompraventa = c.getString("Direccion_Compraventa");
+                        String telefonoCompaventa = c.getString("Telefono_Compraventa");
+                        String nombreUsuario = c.getString("Nombre_Usuario");
+                        String apellidoUsuario = c.getString("Apellido_Usuario");
+                        String kilosTotales = c.getString("Kilos_Totales");
+                        String tipoCafe = c.getString("Tipo_Cafe");
+                        String valorPago = c.getString("Valor_Pago");
+                        String fechaVenta = c.getString("Fecha_Venta");
+                        String horaVenta = c.getString("Hora_Venta");
+                        String tipoMovimiento = c.getString("Tipo_Movimiento");
+                        String nombresCliente = c.getString("Nombre_Cliente");
+                        String cedulaCliente = c.getString("Cedula_Cliente");
+                        String telefonoCliente = c.getString("Telefono_Cliente");
+                        HashMap<String,String> objetos = new HashMap<>();
+                        objetos.put("Numero_Factura","Factura "+j);
+                        objetos.put("Nombre_Compraventa",nombreCompraventa);
+                        objetos.put("Nit_Compraventa",nitCompraVenta);
+                        objetos.put("Direccion_Compraventa",direccionCompraventa);
+                        objetos.put("Telefono_Compraventa",telefonoCompaventa);
+                        objetos.put("Ciudad",ciudadCompraVenta);
+                        objetos.put("Nombre_Usuario",nombreUsuario);
+                        objetos.put("Apellido_Usuario",apellidoUsuario);
+                        objetos.put("Tipo_Cafe",tipoCafe);
+                        objetos.put("Kilos_Totales",kilosTotales);
+                        objetos.put("Valor_Pago",valorPago);
+                        objetos.put("Fecha_Venta",fechaVenta);
+                        objetos.put("Hora_Venta",horaVenta);
+                        objetos.put("Tipo_Movimiento",tipoMovimiento);
+                        objetos.put("Nombre_Cliente",nombresCliente);
+                        objetos.put("Cedula_Cliente",cedulaCliente);
+                        objetos.put("Telefono_Cliente",telefonoCliente);
+                        kilos = kilos + Double.parseDouble(kilosTotales.replace(",",""));
+                        valorpago = valorpago + Double.parseDouble(valorPago.replace(",",""));
+                        list.add(objetos);
+                    }
+                    DecimalFormat formateador = new DecimalFormat("###,###.##");
+                    strFormatvalorPagoSeco = formateador.format(valorpago);
+
+
+                }catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
+                }
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Error al cargar datos",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            pDialog.dismiss();
+            if(length == 0){
+                tvPrueba.setText("No hay registro de facturas en esta fecha");
+            }
+            adapter = new SimpleAdapter(
+                    getApplicationContext(), list,
+                    R.layout.list_view_facturas, new String[]{"Numero_Factura","Nombre_Compraventa","Nit_Compraventa","Ciudad","Nombre_Usuario","Apellido_Usuario","Tipo_Cafe","Kilos_Totales","Valor_Pago","Fecha_Venta","Hora_Venta","Nombre_Cliente","Cedula_Cliente","Telefono_Cliente"}, new int[]{R.id.numerofactura,R.id.nombrecompraventa,R.id.nitcompraventa,R.id.ciudad,R.id.nombreusuario,R.id.apellidousuario,R.id.tipodecafe,R.id.kilostotales,R.id.valorpago,R.id.fecha,R.id.hora,R.id.nombrescliente,R.id.cedulacliente,R.id.telefonocliente
+            });
+            ListView listView = (ListView) findViewById(R.id.listview);
+            listView.setAdapter(adapter);
+            tvKilosTotales.setText("Kilos Totales Comprados: " +kilos);
+            tvDineroGastado.setText("Dinero total gastado: $" +strFormatvalorPagoSeco);
+
+        }
+
     }
 
+    public String makeServiceCallReportes(String reqUrl) {
+        String response = null;
+        try {
+            URL url = new URL(reqUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
 
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter("Fecha_Venta",fecha)
+                    .appendQueryParameter("Nit_Compraventa", nit);
+            String query = builder.build().getEncodedQuery();
+
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            os.close();
+            // read the response
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            response = convertStreamToString(in);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "MalformedURLException: " + e.getMessage());
+        } catch (ProtocolException e) {
+            Log.e(TAG, "ProtocolException: " + e.getMessage());
+        } catch (IOException e) {
+            Log.e(TAG, "IOException: " + e.getMessage());
+        } catch (Exception e) {
+            Log.e(TAG, "Exception: " + e.getMessage());
+        }
+        return response;
+    }
+
+    private String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
 
 }

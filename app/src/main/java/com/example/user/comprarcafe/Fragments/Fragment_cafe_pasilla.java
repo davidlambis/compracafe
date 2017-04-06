@@ -42,7 +42,7 @@ public class Fragment_cafe_pasilla extends Fragment {
     private Button btnCostoCargaPasilla;
     private TextView fechaPasilla,tvValorAPagar;
     private TextClock textClockHoraPasilla;
-    private String VoC,strFechaPasilla, strHoraPasilla, strFechaHora, strTipo = "café pasilla",strMuestraPasilla = "250",nombresUsuario,apellidosUsuario,nombreEmpresa,direccionEmpresa,telefonoEmpresa,nitEmpresa,ciudadEmpresa;
+    private String VoC,strFechaPasilla, strHoraPasilla, strFechaHora, strTipo = "café pasilla",strMuestraPasilla = "250",nombresUsuario,apellidosUsuario,nombreEmpresa,direccionEmpresa,telefonoEmpresa,nitEmpresa,ciudadEmpresa,departamentoEmpresa;
     long idUsuario, idVenta,idEmpresa,id_usuario_logued;
 
     //Instancia del controlador de ventas
@@ -220,6 +220,7 @@ public class Fragment_cafe_pasilla extends Fragment {
                         telefonoEmpresa = db_empresas.findTelefonoEmpresaById(idEmpresa);
                         nitEmpresa = db_empresas.findNitEmpresaById(idEmpresa);
                         ciudadEmpresa = db_empresas.findCiudadEmpresaById(idEmpresa);
+                        departamentoEmpresa = db_empresas.findDepartamentoEmpresaById(idEmpresa);
                         //Insertando datos en la tabla de clientes
                         db_clientes.insertDataClientes(nombresCliente,cedulaCliente,telefonoCliente,null);
                         //Inserción de datos en la tabla de café pasilla
@@ -233,6 +234,7 @@ public class Fragment_cafe_pasilla extends Fragment {
                         i.putExtra("direccionEmpresa",direccionEmpresa);
                         i.putExtra("telefonoEmpresa",telefonoEmpresa);
                         i.putExtra("nitEmpresa",nitEmpresa);
+                        i.putExtra("departamentoEmpresa",departamentoEmpresa);
                         i.putExtra("ciudadEmpresa",ciudadEmpresa);
                         i.putExtra("nombresUsuario",nombresUsuario);
                         i.putExtra("apellidosUsuario",apellidosUsuario);

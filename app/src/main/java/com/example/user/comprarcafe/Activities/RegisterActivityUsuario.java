@@ -16,7 +16,6 @@ import android.view.View.OnClickListener;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-
 import com.example.user.comprarcafe.Controllers.EmpresasController;
 import com.example.user.comprarcafe.Controllers.UsuariosController;
 import com.example.user.comprarcafe.Models.Empresa;
@@ -75,17 +74,17 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
         btnRegistroUsuario = (Button)findViewById(R.id.btnRegistroUsuario);
         spinner = (Spinner)findViewById(R.id.spinnerU);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                idEmpresa = listEmpresa.get(position).getIdEmpresa();
-                usuario = new Usuario();
-                usuario.setIdEmpresa(idEmpresa);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    idEmpresa = listEmpresa.get(position).getIdEmpresa();
+                    usuario = new Usuario();
+                    usuario.setIdEmpresa(idEmpresa);
+                }
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
 
         spinnerEmpresas = new ArrayList<>();
         refresh();

@@ -32,6 +32,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_NIT =  "NIT";
     public static final String COLUMN_DIRECCION_EMPRESA =  "direccionEmpresa";
     public static final String COLUMN_TELEFONO_EMPRESA =  "telefonoEmpresa";
+    public static final String COLUMN_DEPARTAMENTO_EMPRESA =  "departamentoEmpresa";
     public static final String COLUMN_CIUDAD_EMPRESA =  "ciudadEmpresa";
 
     //Datos de la tabla de venta
@@ -114,6 +115,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_CEDULA_CLIENTE_FACTURA = "cedulaCliente";
     public static final String COLUMN_TELEFONO_CLIENTE_FACTURA = "telefonoCliente";
     public static final String COLUMN_HORA_FACTURA = "horaFactura";
+    public static final String COLUMN_DEPARTAMENTO_EMPRESA_FACTURA = "departamentoEmpresaFactura";
     public static final String COLUMN_CIUDAD_EMPRESA_FACTURA = "ciudadEmpresaFactura";
 
     //Sintaxix SQL para crear la tabla de usuarios
@@ -139,6 +141,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
                     COLUMN_NIT + " TEXT , " +
                     COLUMN_DIRECCION_EMPRESA + " TEXT , " +
                     COLUMN_TELEFONO_EMPRESA + " TEXT , " +
+                    COLUMN_DEPARTAMENTO_EMPRESA + " TEXT , " +
                     COLUMN_CIUDAD_EMPRESA + " TEXT " + ")";
                     //COLUMN_ESTADO_EMPRESA + " TEXT " + ")";
 
@@ -232,6 +235,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
                     COLUMN_CEDULA_CLIENTE_FACTURA+ " TEXT, " +
                     COLUMN_TELEFONO_CLIENTE_FACTURA+ " TEXT, " +
                     COLUMN_HORA_FACTURA+ " TEXT, " +
+                    COLUMN_DEPARTAMENTO_EMPRESA_FACTURA+ " TEXT, " +
                     COLUMN_CIUDAD_EMPRESA_FACTURA+ " TEXT, " +
                     "FOREIGN KEY("+COLUMN_VENTA_ID_FACTURA+") REFERENCES "+TABLE_NAME_VENTAS+"("+COLUMN_ID_VENTA+"));" +
                     "FOREIGN KEY("+COLUMN_CLIENTE_ID_FACTURA+") REFERENCES "+TABLE_NAME_CLIENTES+"("+COLUMN_ID_CLIENTE+"));" ;

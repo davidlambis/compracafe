@@ -17,6 +17,7 @@ public class Factura {
     private String cedulaCliente;
     private String telefonoCliente;
     private String hora;
+    private String departamento;
     private String ciudad;
 
     public Factura() {
@@ -36,6 +37,8 @@ public class Factura {
         this.cedulaCliente = cedulaCliente;
         this.telefonoCliente = telefonoCliente;
         this.hora = hora;
+        this.departamento = departamento;
+        this.ciudad = ciudad;
     }
 
     public long getIdFactura() {
@@ -164,6 +167,14 @@ public class Factura {
 
     public void setHora(String hora) {
         this.hora = hora;
+    }
+
+    public String getDepartamento() {
+        return departamento;
+    }
+
+    public void setDepartamento(String departamento) {
+        this.departamento = departamento;
     }
 
     public String getCiudad() {

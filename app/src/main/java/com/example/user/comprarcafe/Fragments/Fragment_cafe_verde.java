@@ -43,7 +43,7 @@ public class Fragment_cafe_verde extends Fragment{
     private Button btnCostoCargaVerde;
     private TextView fechaVerde,tvValorAPagar;
     private TextClock textClockVerde;
-    public String VoC,strFechaVerde, strHoraVerde,strFechaHora, strTipo="café verde", strMuestraVerde = "100",nombresUsuario,apellidosUsuario,nombreEmpresa,direccionEmpresa,telefonoEmpresa,strFormatvalorPagoVerde,nitEmpresa,ciudadEmpresa;
+    public String VoC,strFechaVerde, strHoraVerde,strFechaHora, strTipo="café verde", strMuestraVerde = "100",nombresUsuario,apellidosUsuario,nombreEmpresa,direccionEmpresa,telefonoEmpresa,strFormatvalorPagoVerde,nitEmpresa,ciudadEmpresa,departamentoEmpresa;
     public long idUsuario,idVenta,idEmpresa,id_usuario_logued;;
 
     //Instancia del controlador de ventas
@@ -224,6 +224,7 @@ public class Fragment_cafe_verde extends Fragment{
                         telefonoEmpresa = db_empresas.findTelefonoEmpresaById(idEmpresa);
                         nitEmpresa = db_empresas.findNitEmpresaById(idEmpresa);
                         ciudadEmpresa = db_empresas.findCiudadEmpresaById(idEmpresa);
+                        departamentoEmpresa = db_empresas.findDepartamentoEmpresaById(idEmpresa);
                         //Insertando datos en la tabla de clientes
                         db_clientes.insertDataClientes(nombresCliente,cedulaCliente,telefonoCliente,null);
                         //Inserción de datos en la tabla de café verde
@@ -237,6 +238,7 @@ public class Fragment_cafe_verde extends Fragment{
                         i.putExtra("direccionEmpresa",direccionEmpresa);
                         i.putExtra("telefonoEmpresa",telefonoEmpresa);
                         i.putExtra("nitEmpresa",nitEmpresa);
+                        i.putExtra("departamentoEmpresa",departamentoEmpresa);
                         i.putExtra("ciudadEmpresa",ciudadEmpresa);
                         i.putExtra("nombresUsuario",nombresUsuario);
                         i.putExtra("apellidosUsuario",apellidosUsuario);

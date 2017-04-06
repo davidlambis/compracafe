@@ -62,8 +62,8 @@ import java.util.Date;
 public class FacturaActivity extends AppCompatActivity implements OnClickListener {
 
     public long idUsuario, idVenta, idEmpresa, idCliente;
-    public String nombresUsuario, apellidosUsuario, tipo, kilosTotalesSeco, valorPagoSeco, nombreEmpresa, nombresCliente, cedulaCliente, telefonoCliente, direccionCliente, fecha, hora,fechahora, direccionEmpresa, telefonoEmpresa, kilosTotalesVerde, valorPagoVerde, kilosTotalesPasilla, valorPagoPasilla, strValorPagoSecoIva, strValorPagoVerdeIva, strValorPagoPasillaIva, kilosTotales, valorPago, nitEmpresa, VoC,fecha1,ciudadEmpresa;
-    private TextView tvVoC, factura, facturaCompraventa, facturaVendedor, facturaTipoCafe, facturaKilosTotales, facturaValorTotal, facturaNombreCliente, facturaCedulaCliente, facturaTelefonoCliente, facturaDireccionCliente,facturaCiudad;
+    public String nombresUsuario, apellidosUsuario, tipo, kilosTotalesSeco, valorPagoSeco, nombreEmpresa, nombresCliente, cedulaCliente, telefonoCliente, direccionCliente, fecha, hora,fechahora, direccionEmpresa, telefonoEmpresa, kilosTotalesVerde, valorPagoVerde, kilosTotalesPasilla, valorPagoPasilla, strValorPagoSecoIva, strValorPagoVerdeIva, strValorPagoPasillaIva, kilosTotales, valorPago, nitEmpresa, VoC,fecha1,ciudadEmpresa,departamentoEmpresa;
+    private TextView tvVoC, factura, facturaCompraventa, facturaVendedor, facturaTipoCafe, facturaKilosTotales, facturaValorTotal, facturaNombreCliente, facturaCedulaCliente, facturaTelefonoCliente, facturaDireccionCliente,facturaCiudad, facturaDepartamento;
     private Button btnFacturaImprimir;
     private double valorPagoSecoIva, valorPagoVerdeIva, valorPagoPasillaIva, doubleValorPagoSeco, doubleValorPagoVerde, doubleValorPagoPasilla;
 
@@ -116,6 +116,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         facturaKilosTotales = (TextView) findViewById(R.id.facturaKilosTotales);
         facturaValorTotal = (TextView) findViewById(R.id.facturaValorTotal);
         facturaCiudad = (TextView)findViewById(R.id.facturaCiudad);
+        facturaDepartamento = (TextView)findViewById(R.id.facturaDepartamento);
         btnFacturaImprimir = (Button) findViewById(R.id.btnFacturaImprimir);
 
 
@@ -132,6 +133,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         telefonoEmpresa = getIntent().getExtras().getString("telefonoEmpresa");
         nitEmpresa = getIntent().getExtras().getString("nitEmpresa");
         ciudadEmpresa = getIntent().getExtras().getString("ciudadEmpresa");
+        departamentoEmpresa = getIntent().getExtras().getString("departamentoEmpresa");
         nombresCliente = getIntent().getExtras().getString("nombresCliente");
         cedulaCliente = getIntent().getExtras().getString("cedulaCliente");
         telefonoCliente = getIntent().getExtras().getString("telefonoCliente");
@@ -164,6 +166,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         facturaTelefonoCliente.setText(telefonoCliente);
         //facturaDireccionCliente.setText(direccionCliente);
         facturaCompraventa.setText(nombreEmpresa);
+        facturaDepartamento.setText(departamentoEmpresa);
         facturaCiudad.setText(ciudadEmpresa);
         facturaVendedor.setText(nombresUsuario + " " + apellidosUsuario);
         facturaTipoCafe.setText(tipo);
@@ -236,7 +239,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
             idCliente = db_clientes.idClienteByNombre(cedulaCliente);
 
             //Toast.makeText(this, "fecha:"+fecha, Toast.LENGTH_SHORT).show();
-            db_facturas.insertDataFacturas(idVenta, idCliente, null, nombreEmpresa, nombresUsuario, apellidosUsuario, tipo, strFacturaKilosTotales, strFacturaValorTotal,fecha,nitEmpresa,nombresCliente,cedulaCliente,telefonoCliente,hora,ciudadEmpresa); //VOC NULL
+            db_facturas.insertDataFacturas(idVenta, idCliente, null, nombreEmpresa, nombresUsuario, apellidosUsuario, tipo, strFacturaKilosTotales, strFacturaValorTotal,fecha,nitEmpresa,nombresCliente,cedulaCliente,telefonoCliente,hora,departamentoEmpresa,ciudadEmpresa); //VOC NULL
             //Toast.makeText(this, "Ciudad empresa:"+ciudadEmpresa, Toast.LENGTH_LONG).show();
             new CargarDatosHistoria().execute("http://iot.bitnamiapp.com:3000/factura");
             //First Check if the external storage is writable
@@ -285,6 +288,8 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
             email.setType("application/pdf");
             email.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.startActivity(email);
+
+            finish();
         }else{
             //Se muestra un alert dialog que indica que los datos son erróneos
             final AlertDialog.Builder builder = new AlertDialog.Builder(FacturaActivity.this);
@@ -355,7 +360,8 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
                     .appendQueryParameter("Nombre_Cliente",nombresCliente)
                     .appendQueryParameter("Cedula_Cliente",cedulaCliente)
                     .appendQueryParameter("Telefono_Cliente",telefonoCliente)
-                    .appendQueryParameter("Ciudad",ciudadEmpresa);
+                    .appendQueryParameter("Ciudad",ciudadEmpresa)
+                    .appendQueryParameter("Departamento",departamentoEmpresa);
 
             String query = builder.build().getEncodedQuery();
 
@@ -487,6 +493,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         prHead.add("" + nombreEmpresa + "\n");
         prHead.add("" + direccionEmpresa + "\n");
         prHead.add("" + telefonoEmpresa + "\n");
+        prHead.add("" + departamentoEmpresa + "\n");
         prHead.add("" + ciudadEmpresa + "\n\n");
 
         //Datos Cliente

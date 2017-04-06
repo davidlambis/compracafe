@@ -7,6 +7,7 @@ public class Empresa {
     private String direccionEmpresa;
     private int telefonoEmpresa;
     private String estadoEmpresa;
+    private String departamentoEmpresa;
     private String ciudadEmpresa;
 
     public Empresa() {
@@ -16,6 +17,7 @@ public class Empresa {
         this.direccionEmpresa = direccionEmpresa;
         this.telefonoEmpresa = telefonoEmpresa;
         this.estadoEmpresa = estadoEmpresa;
+        this.departamentoEmpresa = departamentoEmpresa;
         this.ciudadEmpresa = ciudadEmpresa;
     }
 
@@ -65,6 +67,14 @@ public class Empresa {
 
     public void setEstadoEmpresa(String estadoEmpresa) {
         this.estadoEmpresa = estadoEmpresa;
+    }
+
+    public String getDepartamentoEmpresa() {
+        return departamentoEmpresa;
+    }
+
+    public void setDepartamentoEmpresa(String departamentoEmpresa) {
+        this.departamentoEmpresa = departamentoEmpresa;
     }
 
     public String getCiudadEmpresa() {

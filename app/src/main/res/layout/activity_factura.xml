@@ -175,6 +175,31 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Departamento: "
+                    android:id="@+id/tvFacturaDepartamento"
+                    android:padding="8dp"
+                    android:background="#ffffff"
+                    android:drawablePadding="16dp"
+                    android:drawableLeft="@drawable/ciudad"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textStyle="bold"
+                    android:id="@+id/facturaDepartamento"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Ciudad: "
                     android:id="@+id/tvFacturaCiudad"
                     android:padding="8dp"

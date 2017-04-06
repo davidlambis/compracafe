@@ -15,7 +15,7 @@ public class EmpresasController {
     private SQLiteDBHelper dbHelper;
     private Context context;
     private SQLiteDatabase database;
-    public String nombreEmpresa,direccionEmpresa,telefonoEmpresa,nitEmpresa,estadoEmpresa,ciudadEmpresa;
+    public String nombreEmpresa,direccionEmpresa,telefonoEmpresa,nitEmpresa,estadoEmpresa,ciudadEmpresa,departamentoEmpresa;
 
     public EmpresasController(Context c) {
         context = c;
@@ -32,12 +32,13 @@ public class EmpresasController {
     }
 
     //Método para insertar los datos del formulario en la tabla de Empresa
-    public void InsertDataEmpresas(String strNombreCompraVenta,String strNit,String strDireccionCompraVenta, String strTelefonoCompraVenta,String strCiudadCompraVenta){
+    public void InsertDataEmpresas(String strNombreCompraVenta,String strNit,String strDireccionCompraVenta, String strTelefonoCompraVenta,String strDepartamentoCompraVenta, String strCiudadCompraVenta){
         ContentValues values = new ContentValues();
         values.put(SQLiteDBHelper. COLUMN_NOMBRE_EMPRESA,strNombreCompraVenta);
         values.put(SQLiteDBHelper.COLUMN_NIT,strNit);
         values.put(SQLiteDBHelper.COLUMN_DIRECCION_EMPRESA,strDireccionCompraVenta);
         values.put(SQLiteDBHelper.COLUMN_TELEFONO_EMPRESA,strTelefonoCompraVenta);
+        values.put(SQLiteDBHelper.COLUMN_DEPARTAMENTO_EMPRESA,strDepartamentoCompraVenta);
         values.put(SQLiteDBHelper.COLUMN_CIUDAD_EMPRESA,strCiudadCompraVenta);
         //values.put(SQLiteDBHelper. COLUMN_ESTADO_EMPRESA,estadoEmpresa);
         long id = database.insert(SQLiteDBHelper.TABLE_NAME_EMPRESAS,null,values);
@@ -84,7 +85,8 @@ public class EmpresasController {
         empresa.setNIT(cursor.getString(2));
         empresa.setDireccionEmpresa(cursor.getString(3));
         empresa.setTelefonoEmpresa(cursor.getInt(4));
-        empresa.setCiudadEmpresa(cursor.getString(5));
+        empresa.setDepartamentoEmpresa(cursor.getString(5));
+        empresa.setCiudadEmpresa(cursor.getString(6));
         //empresa.setEstadoEmpresa(cursor.getString(5));
         return empresa;
     }
@@ -157,6 +159,17 @@ public class EmpresasController {
             ciudadEmpresa = cursor.getString(cursor.getColumnIndex(SQLiteDBHelper.COLUMN_CIUDAD_EMPRESA));
         }
         return ciudadEmpresa;
+    }
+
+    public String findDepartamentoEmpresaById (Long idEmpresa){
+        dbHelper = new SQLiteDBHelper(context);
+        database = dbHelper.getWritableDatabase();
+        String select ="select * from " +SQLiteDBHelper.TABLE_NAME_EMPRESAS+" where "+ SQLiteDBHelper.COLUMN_ID_EMPRESA+" = '"+idEmpresa+"'";
+        Cursor cursor = database.rawQuery(select,null);
+        if(cursor.moveToFirst()){
+            departamentoEmpresa = cursor.getString(cursor.getColumnIndex(SQLiteDBHelper.COLUMN_DEPARTAMENTO_EMPRESA));
+        }
+        return departamentoEmpresa;
     }
 
    /*public String findEstadoEmpresaById (Long idEmpresa){

@@ -180,9 +180,25 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
                     break;
 
             case R.id.btnRegistrarEmpresa :
-                Intent i = new Intent(this, RegisterActivityEmpresa.class);
-                startActivity(i);
-                Toast.makeText(this,"Ingresa datos de la compraventa",Toast.LENGTH_SHORT).show();
+                if(isOnlineNet()) {
+                    Intent i = new Intent(this, RegisterActivityEmpresa.class);
+                    startActivity(i);
+                    Toast.makeText(this, "Ingresa datos de la compraventa", Toast.LENGTH_SHORT).show();
+                }else{
+                    //Se muestra un alert dialog que indica que los datos son erróneos
+                    final AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setTitle("Alerta");
+                    builder.setMessage("No hay conexión a internet, por favor busca un acceso a internet");
+                    builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
                 break;
             case R.id.btnRegistrarUsuario :
                 Intent j = new Intent(this, RegisterActivityUsuario.class);

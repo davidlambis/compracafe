@@ -45,7 +45,7 @@ public class Fragment_cafe_seco extends Fragment {
     private Button btnCostoCargaSeco,btnImprimirFacturaSeco;
     private TextView fechaSeco,tvValorAPagar;
     private TextClock textClockSeco;
-    public String strTipo = "café seco",strFecha,strHora, strFechaHora,nombresUsuario,apellidosUsuario,nombreEmpresa,strFormatvalorPagoSeco,direccionEmpresa,telefonoEmpresa,nitEmpresa,ciudadEmpresa;
+    public String strTipo = "café seco",strFecha,strHora, strFechaHora,nombresUsuario,apellidosUsuario,nombreEmpresa,strFormatvalorPagoSeco,direccionEmpresa,telefonoEmpresa,nitEmpresa,ciudadEmpresa,departamentoEmpresa;
     public long idUsuario,idEmpresa,id_usuario_logued;
     public long idVenta;
     public String VoC;
@@ -280,7 +280,8 @@ public class Fragment_cafe_seco extends Fragment {
                         telefonoEmpresa = db_empresas.findTelefonoEmpresaById(idEmpresa);
                         nitEmpresa = db_empresas.findNitEmpresaById(idEmpresa);
                         ciudadEmpresa = db_empresas.findCiudadEmpresaById(idEmpresa);
-
+                        departamentoEmpresa = db_empresas.findDepartamentoEmpresaById(idEmpresa);
+                        //Toast.makeText(getActivity(),departamentoEmpresa,Toast.LENGTH_SHORT).show();
                         //Insertando datos en la tabla de clientes
                         db_clientes.insertDataClientes(nombresCliente,cedulaCliente,telefonoCliente,null);
                         //Inserción de datos en la tabla de café seco
@@ -293,6 +294,7 @@ public class Fragment_cafe_seco extends Fragment {
                         i.putExtra("nombreEmpresa",nombreEmpresa);
                         i.putExtra("direccionEmpresa",direccionEmpresa);
                         i.putExtra("telefonoEmpresa",telefonoEmpresa);
+                        i.putExtra("departamentoEmpresa",departamentoEmpresa);
                         i.putExtra("ciudadEmpresa",ciudadEmpresa);
                         i.putExtra("nitEmpresa",nitEmpresa);
                         i.putExtra("nombresUsuario",nombresUsuario);

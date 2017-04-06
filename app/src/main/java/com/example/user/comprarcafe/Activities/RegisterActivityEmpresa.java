@@ -20,12 +20,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import com.example.user.comprarcafe.Controllers.EmpresasController;
+import com.example.user.comprarcafe.Handler.HttpHandler;
 import com.example.user.comprarcafe.R;
 
 import org.json.JSONArray;
@@ -51,19 +53,35 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
     private EditText edtNombreCompraVenta, edtNit, edtDireccionCompraVenta, edtTelefonoCompraVenta,edtCiudadCompraVenta;
     private Button btnRegistroEmpresa;
     String strNit,strNombreCompraventa,strDireccionCompraVenta,strTelefonoCompraVenta,strCiudadCompraVenta,nit,estadoEmpresa;
-    Spinner departamentos, municipios;
-
 
     //Instancia del controlador de empresas
     EmpresasController db_empresas;
 
-    public ArrayList<String> spinnerDepartamentos;
-    public ArrayAdapter<String> adaptersDepartamentos;
+   /////// ****** /////
+   private ProgressDialog pDialog;
+
+    private String departamentoSeleccionado,ciudadSeleccionada;
+    Spinner departamentos, ciudades;
+    public ArrayAdapter<String> adaptersDepartamentos , adaptersCiudades;
+    public ArrayList<String> spinnerDepartamentos, spinnerCiudades;
+    ArrayList<String> listdata;
+
+    // URL JSON
+    private static String url = "http://iot.bitnamiapp.com/iot/colombia.json";
+
+    ///////// ****** //////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_empresa);
+
+        ////
+        departamentos = (Spinner)findViewById(R.id.departamentos);
+        ciudades = (Spinner)findViewById(R.id.ciudades);
+        spinnerDepartamentos = new ArrayList<>();
+        new GetDepartamentos().execute();
+        ////
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.ToolbarRegistroEmpresa);
         setSupportActionBar(toolbar);
@@ -75,17 +93,15 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
         db_empresas = new EmpresasController(this);
         db_empresas.abrirBaseDeDatos();
 
+
         edtNombreCompraVenta = (EditText) findViewById(R.id.edtNombreCompraventa);
         edtNit = (EditText) findViewById(R.id.edtNit);
         edtDireccionCompraVenta = (EditText) findViewById(R.id.edtDireccionCompraVenta);
         edtTelefonoCompraVenta = (EditText) findViewById(R.id.edtTelefonoCompraventa);
-        edtCiudadCompraVenta = (EditText)findViewById(R.id.edtCiudadCompraventa);
         btnRegistroEmpresa = (Button) findViewById(R.id.btnRegistroEmpresa);
-        //loadSpinnerDepartamentos();
-        //Listener del boton de registro
+
         btnRegistroEmpresa.setOnClickListener(this);
 
-        //new CargarDatosHistoriaC().execute("http://iot.bitnamiapp.com/iot/colombia_json.json");
     }
 
     @Override
@@ -109,11 +125,6 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
          strTelefonoCompraVenta = edtTelefonoCompraVenta.getText().toString();
          if (TextUtils.isEmpty(strTelefonoCompraVenta)) {
              edtTelefonoCompraVenta.setError("Llena este campo");
-             return;
-         }
-         strCiudadCompraVenta = edtCiudadCompraVenta.getText().toString();
-         if (TextUtils.isEmpty(strCiudadCompraVenta)) {
-             edtCiudadCompraVenta.setError("Llena este campo");
              return;
          }
 
@@ -270,7 +281,8 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
                     .appendQueryParameter("direccion_unidad_productiva", strDireccionCompraVenta)
                     .appendQueryParameter("telefono_unidad_productiva", strTelefonoCompraVenta)
                     .appendQueryParameter("nombre_unidad_productiva", strNombreCompraventa)
-                    .appendQueryParameter("ciudad",strCiudadCompraVenta)
+                    .appendQueryParameter("ciudad",ciudadSeleccionada)
+                    .appendQueryParameter("departamento",departamentoSeleccionado)
                     .appendQueryParameter("proyecto_id","58d423a18681e2334bdb5f99");
             String query = builder.build().getEncodedQuery();
 
@@ -300,46 +312,6 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
             }
         }
     }
-
-    /*
-    //Carga de datos de Departamentos y municipios
-    private String downloadUrlC(String myurl) throws IOException {
-        InputStream is = null;
-        Log.i("URl", "" + myurl);
-        myurl = myurl.replace(" ", "%20");
-        // Only display the first 500 characters of the retrieved
-        // web page content.
-        int len = 60000;
-
-        try {
-            URL url = new URL(myurl);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(90000);
-            conn.setConnectTimeout(95000);
-
-            //POSTEA
-            conn.setRequestMethod("POST");
-            //conn.setDoInput(true);
-            conn.setDoOutput(true);
-
-            // Starts the query
-            conn.connect();
-            int response = conn.getResponseCode();
-            Log.d("Respuesta", "The response is: " + response);
-            is = conn.getInputStream();
-
-            // Convert the InputStream into a string
-            String contentAsString = readIt(is, len);
-            return contentAsString;
-
-            // Makes sure that the InputStream is closed after the app is
-            // finished using it.
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-    } */
 
 
     // Reads an InputStream and converts it to a String.
@@ -415,8 +387,8 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
                 }
                 else{
                     //estadoEmpresa = "1"; // Ya se han subido los datos a la nube.
-                    db_empresas.InsertDataEmpresas(strNombreCompraventa,strNit,strDireccionCompraVenta,strTelefonoCompraVenta,strCiudadCompraVenta);
-                    Toast.makeText(getApplicationContext(),"Ciudad:"+strCiudadCompraVenta,Toast.LENGTH_SHORT).show();
+                    db_empresas.InsertDataEmpresas(strNombreCompraventa,strNit,strDireccionCompraVenta,strTelefonoCompraVenta,departamentoSeleccionado,ciudadSeleccionada);
+                    //Toast.makeText(getApplicationContext(),"Ciudad:"+strCiudadCompraVenta,Toast.LENGTH_SHORT).show();
                     Toast.makeText(getApplicationContext(), "Datos de empresa registrados correctamente, registra tus datos de usuario para poder iniciar sesión", Toast.LENGTH_LONG).show();
                     Intent i = new Intent(getApplicationContext(),RegisterActivityUsuario .class);
                     startActivity(i);
@@ -458,50 +430,182 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
 
     }
 
-    /*
-    //Departamentos y ciudades
-    private class CargarDatosHistoriaC extends AsyncTask<String, Void, String> {
 
+    //////////
+    private class GetDepartamentos extends AsyncTask<Void, Void, Void> {
         @Override
-        protected String doInBackground(String... urls) {
-            // params comes from the execute() call: params[0] is the url.
-            try {
-                return downloadUrlC(urls[0]);
-            } catch (IOException e) {
-                return "Unable to retrieve web page. URL may be invalid.";
-            }
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+            pDialog = new ProgressDialog(RegisterActivityEmpresa.this);
+            pDialog.setMessage("Cargando...");
+            pDialog.setCancelable(false);
+            pDialog.show();
         }
 
-
-        // onPostExecute displays the results of the AsyncTask.
         @Override
-        protected void onPostExecute(String result) {
-            try{
-                JSONArray jsonArray = new JSONArray(new String(result));
-                int length = jsonArray.length();
-                List<String> listContents = new ArrayList<String>(length);
-                ArrayList<HashMap<String, String>> list = new ArrayList<>();
-                for (int i = 0; i < length; i++) {
-                    listContents.add(jsonArray.getString(i));
-                    JSONObject c = jsonArray.getJSONObject(i);
-                    String departamentos  = c.getString("departamento");
-                    HashMap<String,String> objetos = new HashMap<>();
-                    objetos.put("departamento",departamentos);
+        protected Void doInBackground(Void... arg0) {
+            HttpHandler sh = new HttpHandler();
+
+            // Making a request to url and getting response
+            String jsonStr = sh.makeServiceCall(url);
+            if (jsonStr != null) {
+                try {
+
+                    JSONArray jsonArray = new JSONArray(jsonStr);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject c = jsonArray.getJSONObject(i);
+                        String departamento = c.getString("departamento");
+                        spinnerDepartamentos.add(departamento);
+                    }
+                }catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
                 }
-                SpinnerAdapter adapter = new SimpleAdapter(
-                        RegisterActivityEmpresa.this, list,
-                        R.layout.activity_register_empresa, new String[]{"departamento"}, new int[]{R.id.spinnerDepartamentos
-                });
-                departamentos.setAdapter(adapter);
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Couldn't get json from server. Check LogCat for possible errors!",
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
 
+                }
 
-            }catch (JSONException e) {
-                e.printStackTrace();
-            }
+                return null;
         }
 
-    }*/
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            // Dismiss the progress dialog
+            if (pDialog.isShowing())
+                pDialog.dismiss();
 
+            adaptersDepartamentos = new ArrayAdapter<>(getApplicationContext(),R.layout.spinner_item,spinnerDepartamentos);
+            departamentos.setAdapter(adaptersDepartamentos);
+
+            departamentos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    departamentoSeleccionado = spinnerDepartamentos.get(position);
+                    new GetCiudadesByDepartamento().execute();
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+
+        }
+    }
+
+    private class GetCiudadesByDepartamento extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+            pDialog = new ProgressDialog(RegisterActivityEmpresa.this);
+            pDialog.setMessage("Cargando...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            HttpHandler sh = new HttpHandler();
+
+            // Making a request to url and getting response
+            String jsonStr = sh.makeServiceCall(url);
+
+            if (jsonStr != null) {
+                try {
+
+                    JSONArray jsonArray = new JSONArray(jsonStr);
+
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject c = jsonArray.getJSONObject(i);
+                        if(c.getString("departamento").equals(departamentoSeleccionado)){
+                            JSONArray ciudades = c.getJSONArray("ciudades");
+                            listdata = new ArrayList<String>();
+                            for (int j = 0; j < ciudades.length();j++) {
+                                listdata.add(ciudades.getString(j));
+                            }
+                        }
+                    }
+
+
+                } catch (final JSONException e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
+                }
+            } else {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            // Dismiss the progress dialog
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+
+            adaptersCiudades = new ArrayAdapter<>(getApplicationContext(),R.layout.spinner_item,listdata);
+            ciudades.setAdapter(adaptersCiudades);
+
+            ciudades.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    ciudadSeleccionada = listdata.get(position);
+
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+
+        }
+
+    }
+
+
+
+    //////////
 
 }
 

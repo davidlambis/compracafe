@@ -32,7 +32,7 @@ public class FacturasController {
     }
 
     //Método para insertar datos en la tabla de facturas
-    public void insertDataFacturas(long idVenta,long idCliente,String VoC, String nombreEmpresaFactura,String nombresUsuarioFactura,String apellidosUsuarioFactura,String tipoCafeFactura,String kilosTotalesFactura,String valorPagoFactura,String fechaFactura,String nitEmpresa,String nombresCliente,String cedulaCliente,String telefonoCliente,String horaFactura,String ciudadFactura){
+    public void insertDataFacturas(long idVenta,long idCliente,String VoC, String nombreEmpresaFactura,String nombresUsuarioFactura,String apellidosUsuarioFactura,String tipoCafeFactura,String kilosTotalesFactura,String valorPagoFactura,String fechaFactura,String nitEmpresa,String nombresCliente,String cedulaCliente,String telefonoCliente,String horaFactura,String departamentoFactura,String ciudadFactura){
         ContentValues values = new ContentValues();
         values.put(SQLiteDBHelper.COLUMN_VENTA_ID_FACTURA,idVenta);
         values.put(SQLiteDBHelper.COLUMN_CLIENTE_ID_FACTURA,idCliente);
@@ -49,6 +49,7 @@ public class FacturasController {
         values.put(SQLiteDBHelper.COLUMN_CEDULA_CLIENTE_FACTURA,cedulaCliente);
         values.put(SQLiteDBHelper.COLUMN_TELEFONO_CLIENTE_FACTURA,telefonoCliente);
         values.put(SQLiteDBHelper.COLUMN_HORA_FACTURA,horaFactura);
+        values.put(SQLiteDBHelper.COLUMN_DEPARTAMENTO_EMPRESA_FACTURA,departamentoFactura);
         values.put(SQLiteDBHelper.COLUMN_CIUDAD_EMPRESA_FACTURA,ciudadFactura);
         long id = database.insert(SQLiteDBHelper.TABLE_NAME_FACTURAS,null,values);
     }
@@ -102,7 +103,8 @@ public class FacturasController {
         factura.setCedulaCliente(cursor.getString(13));
         factura.setTelefonoCliente(cursor.getString(14));
         factura.setHora(cursor.getString(15));
-        factura.setCiudad(cursor.getString(16));
+        factura.setDepartamento(cursor.getString(16));
+        factura.setCiudad(cursor.getString(17));
         //empresa.setEstadoEmpresa(cursor.getString(5));
         return factura;
     }
