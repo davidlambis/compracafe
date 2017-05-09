@@ -36,12 +36,18 @@
             android:paddingLeft="24dp"
             android:paddingRight="24dp">
 
-            <TextView
+           <!-- <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Selecciona tu compraventa : "
                 android:id="@+id/tvSpinnerU"
-                />
+                /> -->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Compraventa:"
+                android:textSize="18dp"/>
 
             <Spinner
                 android:layout_width="wrap_content"

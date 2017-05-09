@@ -1,12 +1,17 @@
 package com.example.user.comprarcafe.Activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,14 +27,32 @@ import com.example.user.comprarcafe.Models.Empresa;
 import com.example.user.comprarcafe.Models.Usuario;
 import com.example.user.comprarcafe.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class RegisterActivityUsuario extends AppCompatActivity implements OnClickListener {
 
-    private EditText edtNombresUsuario, edtApellidosUsuario, edtCedulaUsuario,edtDireccionUsuario, edtTelefonoUsuario, edtCorreoUsuario, edtContraseñaUsuario;
+    private EditText edtNombresUsuario, edtApellidosUsuario, edtCedulaUsuario, edtDireccionUsuario, edtTelefonoUsuario, edtCorreoUsuario, edtContraseñaUsuario;
     private Button btnRegistroUsuario;
-    private String estadoEmpresa;
-
+    private String estadoEmpresa,strNombresUsuario,strApellidosUsuario,strCedulaUsuario,strDireccionUsuario,strTelefonoUsuario,strCorreoUsuario,strContraseñaUsuario,estado_sesion,strIdEmpresa,correo,correo2;
+    private String nombreEmpresa,nitEmpresa,direccionEmpresa,telefonoEmpresa,departamentoEmpresa,ciudadEmpresa;
     Usuario usuario;
 
     //Instancia del controlador de usuarios
@@ -44,12 +67,16 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
     public ArrayList<Empresa> listEmpresa;
     long idEmpresa;
 
+    ArrayList<Empresa> numero_empresas;
+
+    //TODO DECLARAR URL
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_usuario);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.ToolbarRegistroUsuario);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.ToolbarRegistroUsuario);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("REGISTRO USUARIO");
@@ -64,43 +91,48 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
         db_usuarios = new UsuariosController(this);
         db_usuarios.abrirBaseDeDatos();
 
-        edtNombresUsuario = (EditText)findViewById(R.id.edtNombresUsuario);
-        edtApellidosUsuario = (EditText)findViewById(R.id.edtApellidosUsuario);
-        edtCedulaUsuario = (EditText)findViewById(R.id.edtCedulaUsuario);
-        edtDireccionUsuario = (EditText)findViewById(R.id.edtDireccionUsuario);
-        edtTelefonoUsuario = (EditText)findViewById(R.id.edtTelefonoUsuario);
-        edtCorreoUsuario = (EditText)findViewById(R.id.edtCorreoUsuario);
-        edtContraseñaUsuario = (EditText)findViewById(R.id.edtContraseñaUsuario);
-        btnRegistroUsuario = (Button)findViewById(R.id.btnRegistroUsuario);
-        spinner = (Spinner)findViewById(R.id.spinnerU);
+        numero_empresas = db_empresas.findAllEmpresas();
 
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    idEmpresa = listEmpresa.get(position).getIdEmpresa();
-                    usuario = new Usuario();
-                    usuario.setIdEmpresa(idEmpresa);
-                }
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
-            });
+        edtNombresUsuario = (EditText) findViewById(R.id.edtNombresUsuario);
+        edtApellidosUsuario = (EditText) findViewById(R.id.edtApellidosUsuario);
+        edtCedulaUsuario = (EditText) findViewById(R.id.edtCedulaUsuario);
+        edtDireccionUsuario = (EditText) findViewById(R.id.edtDireccionUsuario);
+        edtTelefonoUsuario = (EditText) findViewById(R.id.edtTelefonoUsuario);
+        edtCorreoUsuario = (EditText) findViewById(R.id.edtCorreoUsuario);
+        edtContraseñaUsuario = (EditText) findViewById(R.id.edtContraseñaUsuario);
+        btnRegistroUsuario = (Button) findViewById(R.id.btnRegistroUsuario);
+        spinner = (Spinner) findViewById(R.id.spinnerU);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                idEmpresa = listEmpresa.get(position).getIdEmpresa();
+                usuario = new Usuario();
+                usuario.setIdEmpresa(idEmpresa);
+                strIdEmpresa = Long.toString(idEmpresa);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         spinnerEmpresas = new ArrayList<>();
         refresh();
 
         adaptersEmpresas = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinnerEmpresas);
-        if(adaptersEmpresas.getCount() == 0){
-            Toast.makeText(this,"No se ha registrado ninguna empresa,regístra tu compraventa para crear usuario",Toast.LENGTH_LONG).show();
-            Intent i = new Intent(this,RegisterActivityEmpresa.class);
+        if (adaptersEmpresas.getCount() == 0) {
+            Toast.makeText(this, "No se ha registrado ninguna empresa,regístra tu compraventa para crear usuario", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(this, RegisterActivityEmpresa.class);
             startActivity(i);
             finish();
         }
 
         ///ListLecturas.setAdapter(adapters);
         spinner.setAdapter(adaptersEmpresas);
-
+        //spinner.setVisibility(View.GONE);
         btnRegistroUsuario.setOnClickListener(this);
+
 
     }
 
@@ -118,62 +150,92 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
             empresa1.setIdEmpresa(empresa.getIdEmpresa());
             empresa1.setNombreEmpresa(empresa.getNombreEmpresa());
             listEmpresa.add(empresa1);
-            spinnerEmpresas.add(empresa.getIdEmpresa()+" ("+ empresa.getNombreEmpresa()+")");
+            spinnerEmpresas.add(empresa.getNombreEmpresa());
         }
     }
 
     @Override
     public void onClick(View v) {
-        String strNombresUsuario = edtNombresUsuario.getText().toString();
+        strNombresUsuario = edtNombresUsuario.getText().toString();
         if (TextUtils.isEmpty(strNombresUsuario)) {
             edtNombresUsuario.setError("Llena este campo");
             return;
         }
-        String strApellidosUsuario = edtApellidosUsuario.getText().toString();
+        strApellidosUsuario = edtApellidosUsuario.getText().toString();
         if (TextUtils.isEmpty(strApellidosUsuario)) {
             edtApellidosUsuario.setError("Llena este campo");
             return;
         }
-        String strCedulaUsuario = edtCedulaUsuario.getText().toString();
+        strCedulaUsuario = edtCedulaUsuario.getText().toString();
         if (TextUtils.isEmpty(strCedulaUsuario)) {
             edtCedulaUsuario.setError("Llena este campo");
             return;
         }
-        String strDireccionUsuario = edtDireccionUsuario.getText().toString();
+        strDireccionUsuario = edtDireccionUsuario.getText().toString();
         if (TextUtils.isEmpty(strDireccionUsuario)) {
             edtDireccionUsuario.setError("Llena este campo");
             return;
         }
-        String strTelefonoUsuario = edtTelefonoUsuario.getText().toString();
+        strTelefonoUsuario = edtTelefonoUsuario.getText().toString();
         if (TextUtils.isEmpty(strTelefonoUsuario)) {
             edtTelefonoUsuario.setError("Llena este campo");
             return;
         }
-        String strCorreoUsuario = edtCorreoUsuario.getText().toString();
+        strCorreoUsuario = edtCorreoUsuario.getText().toString();
         if (TextUtils.isEmpty(strCorreoUsuario)) {
             edtCorreoUsuario.setError("Llena este campo");
             return;
         }
-        String strContraseñaUsuario = edtContraseñaUsuario.getText().toString();
+
+        strContraseñaUsuario = edtContraseñaUsuario.getText().toString();
         if (TextUtils.isEmpty(strContraseñaUsuario)) {
             edtContraseñaUsuario.setError("Llena este campo");
             return;
         }
         //Validar si existe el correo
-        ArrayList correo = db_usuarios.findUsuario(strCorreoUsuario);
-        if(correo.size() != 0) {
+        //TODO VALIDAR EN LA NUBE
+        if(numero_empresas.size() > 0) {
+            /*nombreEmpresa = getIntent().getExtras().getString("Nombre_Empresa");
+            nitEmpresa = getIntent().getExtras().getString("Nit_Empresa");
+            direccionEmpresa = getIntent().getExtras().getString("Direccion_Empresa");
+            telefonoEmpresa = getIntent().getExtras().getString("Telefono_Empresa");
+            departamentoEmpresa = getIntent().getExtras().getString("Departamento_Empresa");
+            ciudadEmpresa = getIntent().getExtras().getString("Ciudad_Empresa");*/
+            nombreEmpresa = db_empresas.findNombreEmpresaById(idEmpresa);
+            nitEmpresa = db_empresas.findNitEmpresaById(idEmpresa);
+            direccionEmpresa = db_empresas.findDireccionEmpresaById(idEmpresa);
+            telefonoEmpresa = db_empresas.findTelefonoEmpresaById(idEmpresa);
+            departamentoEmpresa = db_empresas.findDepartamentoEmpresaById(idEmpresa);
+            ciudadEmpresa = db_empresas.findCiudadEmpresaById(idEmpresa);
+        }
+
+        estado_sesion = "0";
+        new validaCorreoUsuario().execute();
+
+
+        /*if(correo != null) {
+            Toast.makeText(getApplicationContext(), "No se puede registrar porque el correo ya está registrado", Toast.LENGTH_SHORT).show();
+            edtCorreoUsuario.setError("Ya está registrado");
+        }*/
+
+
+
+        /*ArrayList correo = db_usuarios.findUsuario(strCorreoUsuario);
+        if (correo.size() != 0) {
             edtCorreoUsuario.setError("Este correo ya está registrado");
-        }else {
-            String estado_sesion = "0";
+        } else {
+            new posteaUsuario().execute();
+            estado_sesion = "0";
             //Insertar datos en la base de datos de usuarios, llamando al método InsertDataUsuarios(creado manualmente)
-            db_usuarios.InsertDataUsuarios(idEmpresa, strNombresUsuario, strApellidosUsuario, strCedulaUsuario, strDireccionUsuario, strTelefonoUsuario, strCorreoUsuario, strContraseñaUsuario,estado_sesion);
+            db_usuarios.InsertDataUsuarios(idEmpresa, strNombresUsuario, strApellidosUsuario, strCedulaUsuario, strDireccionUsuario, strTelefonoUsuario, strCorreoUsuario, strContraseñaUsuario, estado_sesion);
             //Dialogo de alerta estableciendo que se ha registrado correctamente
+
             final AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivityUsuario.this);
             builder.setTitle("Bien");
             builder.setMessage("Te has registrado correctamente, puedes iniciar sesión");
             builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which) {
                     Intent intent = new Intent(RegisterActivityUsuario.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
@@ -181,7 +243,249 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
             });
             AlertDialog dialog = builder.create();
             dialog.show();
-        }
+        } */
     }
+
+    //Validar si el correo ya está registrado
+
+    private class validaCorreoUsuario extends AsyncTask<String, Void, String> {
+
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(RegisterActivityUsuario.this,
+                    "Cargando...", "");
+            progressDialog.setCancelable(true);
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String jsonStr = makeServiceCallUsuariosCorreo("http://iot.bitnamiapp.com:3000/usuario_correo");
+            if(jsonStr != null){
+                try{
+                    JSONArray jsonArray = new JSONArray(jsonStr);
+                    int length = jsonArray.length();
+                    List<String> listContents = new ArrayList<String>(length);
+                    for (int i = 0; i < length; i++) {
+                        listContents.add(jsonArray.getString(i));
+                        JSONObject c = jsonArray.getJSONObject(i);
+                        correo = c.getString("Correo_Usuario");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+
+        }
+
+        protected void onPostExecute(String result) {
+            progressDialog.dismiss();
+
+            if(correo == null){
+                String estado_sesion = "0";
+                //Insertar datos en la base de datos de usuarios, llamando al método InsertDataUsuarios(creado manualmente)
+                new posteaUsuario().execute();
+                db_usuarios.InsertDataUsuarios(idEmpresa, strNombresUsuario, strApellidosUsuario, strCedulaUsuario, strDireccionUsuario, strTelefonoUsuario, strCorreoUsuario, strContraseñaUsuario, estado_sesion);
+                //Dialogo de alerta estableciendo que se ha registrado correctamente
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivityUsuario.this);
+                builder.setTitle("Bien");
+                builder.setMessage("Te has registrado correctamente, puedes iniciar sesión");
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(RegisterActivityUsuario.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+
+            if(correo != null) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+                Toast.makeText(getApplicationContext(),"No se puede registrar el usuario porque ya está registrado",Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Ingresa de nuevo los datos",Toast.LENGTH_SHORT).show();
+            }
+
+            /*if(correo != null){
+                Toast.makeText(getApplicationContext(),"No se puede registrar porque el correo ya está registrado",Toast.LENGTH_SHORT).show();
+                edtCorreoUsuario.setError("Ya está registrado");
+            }*/
+
+
+          /*  if(correo == null){
+                String estado_sesion = "0";
+                //Insertar datos en la base de datos de usuarios, llamando al método InsertDataUsuarios(creado manualmente)
+                new posteaUsuario().execute();
+                db_usuarios.InsertDataUsuarios(idEmpresa, strNombresUsuario, strApellidosUsuario, strCedulaUsuario, strDireccionUsuario, strTelefonoUsuario, strCorreoUsuario, strContraseñaUsuario, estado_sesion);
+                //Dialogo de alerta estableciendo que se ha registrado correctamente
+
+                final AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivityUsuario.this);
+                builder.setTitle("Bien");
+                builder.setMessage("Te has registrado correctamente, puedes iniciar sesión");
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(RegisterActivityUsuario.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+
+            if(correo != null){
+                Toast.makeText(getApplicationContext(),"No se puede registrar porque el correo ya está registrado",Toast.LENGTH_SHORT).show();
+                edtCorreoUsuario.setError("Ya está registrado");
+            } */
+
+
+        }
+
+
+    }
+
+     public String makeServiceCallUsuariosCorreo(String reqUrl) {
+        String response = null;
+        try {
+            URL url = new URL(reqUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+
+
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter("Correo_Usuario", strCorreoUsuario);
+            String query = builder.build().getEncodedQuery();
+
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            os.close();
+            // read the response
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            response = convertStreamToString(in);
+        } catch (MalformedURLException e) {
+            //Log.e(TAG, "MalformedURLException: " + e.getMessage());
+        } catch (ProtocolException e) {
+            //Log.e(TAG, "ProtocolException: " + e.getMessage());
+        } catch (IOException e) {
+            //Log.e(TAG, "IOException: " + e.getMessage());
+        } catch (Exception e) {
+            //Log.e(TAG, "Exception: " + e.getMessage());
+        }
+        return response;
+    }
+
+    //POSTEO DE DATOS DE USUARIOS
+    //POSTEO
+    private class posteaUsuario extends AsyncTask<String, Void, String> {
+
+        /*ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(RegisterActivityUsuario.this,
+                    "Cargando...","");
+            progressDialog.setCancelable(true);
+        } */
+
+        @Override
+        protected String doInBackground(String... urls) {
+            // params comes from the execute() call: params[0] is the url.
+            return makeServiceCallUsuarios("http://iot.bitnamiapp.com:3000/usuario");
+        }
+
+        // onPostExecute displays the results of the AsyncTask.
+        @Override
+        protected void onPostExecute(String result) {
+            //progressDialog.dismiss();
+        }
+
+    }
+
+    public String makeServiceCallUsuarios(String reqUrl) {
+        String response = null;
+        try {
+            URL url = new URL(reqUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+
+            Uri.Builder builder = new Uri.Builder()
+                    .appendQueryParameter("Id_Empresa", strIdEmpresa)
+                    .appendQueryParameter("Nombres_Usuario", strNombresUsuario)
+                    .appendQueryParameter("Apellidos_Usuario", strApellidosUsuario)
+                    .appendQueryParameter("Cedula_Usuario", strCedulaUsuario)
+                    .appendQueryParameter("Direccion_Usuario", strDireccionUsuario)
+                    .appendQueryParameter("Telefono_Usuario", strTelefonoUsuario)
+                    .appendQueryParameter("Correo_Usuario", strCorreoUsuario)
+                    .appendQueryParameter("Contrasena_Usuario", strContraseñaUsuario)
+                    .appendQueryParameter("Estado_Sesion", estado_sesion)
+                    .appendQueryParameter("Nombre_Empresa",nombreEmpresa)
+                    .appendQueryParameter("Nit_Empresa",nitEmpresa)
+                    .appendQueryParameter("Direccion_Empresa",direccionEmpresa)
+                    .appendQueryParameter("Telefono_Empresa",telefonoEmpresa)
+                    .appendQueryParameter("Departamento_Empresa",departamentoEmpresa)
+                    .appendQueryParameter("Ciudad_Empresa",ciudadEmpresa);
+
+            String query = builder.build().getEncodedQuery();
+
+            OutputStream os = conn.getOutputStream();
+            BufferedWriter writer = new BufferedWriter(
+                    new OutputStreamWriter(os, "UTF-8"));
+            writer.write(query);
+            writer.flush();
+            writer.close();
+            os.close();
+            // read the response
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            response = convertStreamToString(in);
+        } catch (MalformedURLException e) {
+            //Log.e(TAG, "MalformedURLException: " + e.getMessage());
+        } catch (ProtocolException e) {
+            //Log.e(TAG, "ProtocolException: " + e.getMessage());
+        } catch (IOException e) {
+            //Log.e(TAG, "IOException: " + e.getMessage());
+        } catch (Exception e) {
+            //Log.e(TAG, "Exception: " + e.getMessage());
+        }
+        return response;
+    }
+
+
+
+    private String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
+
+        String line;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return sb.toString();
+    }
+
 
 }

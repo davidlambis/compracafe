@@ -137,6 +137,22 @@ public class UsuariosController {
         return list;
     }
 
+
+    //Método para listar todas las empresas
+    public ArrayList<Usuario> findAllUsuarios() {
+
+        dbHelper = new SQLiteDBHelper(context);
+        database = dbHelper.getWritableDatabase();
+        String select = "select * from " + SQLiteDBHelper.TABLE_NAME_USUARIOS;
+        Cursor cursor = database.rawQuery(select, null);
+        ArrayList<Usuario> list = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Usuario usuario = cursorToNote(cursor);
+            list.add(usuario);
+        }
+        return list;
+    }
+
     /////Asignar datos de la base de datos al metodos Set
     private Usuario cursorToNote(Cursor cursor) {
         Usuario usuario = new Usuario();

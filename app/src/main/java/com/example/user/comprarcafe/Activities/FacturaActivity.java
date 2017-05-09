@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,8 +63,8 @@ import java.util.Date;
 public class FacturaActivity extends AppCompatActivity implements OnClickListener {
 
     public long idUsuario, idVenta, idEmpresa, idCliente;
-    public String nombresUsuario, apellidosUsuario, tipo, kilosTotalesSeco, valorPagoSeco, nombreEmpresa, nombresCliente, cedulaCliente, telefonoCliente, direccionCliente, fecha, hora,fechahora, direccionEmpresa, telefonoEmpresa, kilosTotalesVerde, valorPagoVerde, kilosTotalesPasilla, valorPagoPasilla, strValorPagoSecoIva, strValorPagoVerdeIva, strValorPagoPasillaIva, kilosTotales, valorPago, nitEmpresa, VoC,fecha1,ciudadEmpresa,departamentoEmpresa;
-    private TextView tvVoC, factura, facturaCompraventa, facturaVendedor, facturaTipoCafe, facturaKilosTotales, facturaValorTotal, facturaNombreCliente, facturaCedulaCliente, facturaTelefonoCliente, facturaDireccionCliente,facturaCiudad, facturaDepartamento;
+    public String nombresUsuario, apellidosUsuario, tipo, kilosTotalesSeco, valorPagoSeco, nombreEmpresa, nombresCliente, cedulaCliente, telefonoCliente, direccionCliente, fecha, hora, fechahora, direccionEmpresa, telefonoEmpresa, kilosTotalesVerde, valorPagoVerde, kilosTotalesPasilla, valorPagoPasilla, strValorPagoSecoIva, strValorPagoVerdeIva, strValorPagoPasillaIva, kilosTotales, valorPago, nitEmpresa, VoC, fecha1, ciudadEmpresa, departamentoEmpresa;
+    private TextView tvVoC, factura, facturaCompraventa, facturaVendedor, facturaTipoCafe, facturaKilosTotales, facturaValorTotal, facturaNombreCliente, facturaCedulaCliente, facturaTelefonoCliente, facturaDireccionCliente, facturaCiudad, facturaDepartamento;
     private Button btnFacturaImprimir;
     private double valorPagoSecoIva, valorPagoVerdeIva, valorPagoPasillaIva, doubleValorPagoSeco, doubleValorPagoVerde, doubleValorPagoPasilla;
 
@@ -86,7 +87,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factura);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.ToolbarFactura);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.ToolbarFactura);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("DATOS DE LA FACTURA");
@@ -115,8 +116,8 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         facturaTipoCafe = (TextView) findViewById(R.id.facturaTipoCafe);
         facturaKilosTotales = (TextView) findViewById(R.id.facturaKilosTotales);
         facturaValorTotal = (TextView) findViewById(R.id.facturaValorTotal);
-        facturaCiudad = (TextView)findViewById(R.id.facturaCiudad);
-        facturaDepartamento = (TextView)findViewById(R.id.facturaDepartamento);
+        facturaCiudad = (TextView) findViewById(R.id.facturaCiudad);
+        facturaDepartamento = (TextView) findViewById(R.id.facturaDepartamento);
         btnFacturaImprimir = (Button) findViewById(R.id.btnFacturaImprimir);
 
 
@@ -171,7 +172,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         facturaVendedor.setText(nombresUsuario + " " + apellidosUsuario);
         facturaTipoCafe.setText(tipo);
 
-        Toast.makeText(this,"Datos de la Factura",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Datos de la Factura", Toast.LENGTH_SHORT).show();
 
         switch (tipo) {
             case "café seco":
@@ -223,7 +224,8 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case android.R.id.home:
-               finish();
+                finish();
+                //shouldUpRecreateTask(new Intent(this,MainActivity.class));
                 break;
         }
 
@@ -232,14 +234,14 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
 
     @Override
     public void onClick(View v) {
-        if(isOnlineNet()){
+        if (isOnlineNet()) {
             String strFacturaKilosTotales = facturaKilosTotales.getText().toString();
             String strFacturaValorTotal = facturaValorTotal.getText().toString();
 
             idCliente = db_clientes.idClienteByNombre(cedulaCliente);
 
             //Toast.makeText(this, "fecha:"+fecha, Toast.LENGTH_SHORT).show();
-            db_facturas.insertDataFacturas(idVenta, idCliente, null, nombreEmpresa, nombresUsuario, apellidosUsuario, tipo, strFacturaKilosTotales, strFacturaValorTotal,fecha,nitEmpresa,nombresCliente,cedulaCliente,telefonoCliente,hora,departamentoEmpresa,ciudadEmpresa); //VOC NULL
+            db_facturas.insertDataFacturas(idVenta, idCliente, null, nombreEmpresa, nombresUsuario, apellidosUsuario, tipo, strFacturaKilosTotales, strFacturaValorTotal, fecha, nitEmpresa, nombresCliente, cedulaCliente, telefonoCliente, hora, departamentoEmpresa, ciudadEmpresa); //VOC NULL
             //Toast.makeText(this, "Ciudad empresa:"+ciudadEmpresa, Toast.LENGTH_LONG).show();
             new CargarDatosHistoria().execute("http://iot.bitnamiapp.com:3000/factura");
             //First Check if the external storage is writable
@@ -290,7 +292,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
             this.startActivity(email);
 
             finish();
-        }else{
+        } else {
             //Se muestra un alert dialog que indica que los datos son erróneos
             final AlertDialog.Builder builder = new AlertDialog.Builder(FacturaActivity.this);
             builder.setTitle("Alerta");
@@ -313,7 +315,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         try {
             Process p = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.es");
 
-            int val           = p.waitFor();
+            int val = p.waitFor();
             boolean reachable = (val == 0);
             return reachable;
 
@@ -355,19 +357,19 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
                     .appendQueryParameter("Valor_Pago", valorPago)
                     .appendQueryParameter("Fecha_Venta", fecha)
                     .appendQueryParameter("Hora_Venta", hora)
-                    .appendQueryParameter("Fecha_Hora_Venta",fechahora)
-                    .appendQueryParameter("Tipo_Movimiento",VoC)
-                    .appendQueryParameter("Nombre_Cliente",nombresCliente)
-                    .appendQueryParameter("Cedula_Cliente",cedulaCliente)
-                    .appendQueryParameter("Telefono_Cliente",telefonoCliente)
-                    .appendQueryParameter("Ciudad",ciudadEmpresa)
-                    .appendQueryParameter("Departamento",departamentoEmpresa);
+                    .appendQueryParameter("Fecha_Hora_Venta", fechahora)
+                    .appendQueryParameter("Tipo_Movimiento", VoC)
+                    .appendQueryParameter("Nombre_Cliente", nombresCliente)
+                    .appendQueryParameter("Cedula_Cliente", cedulaCliente)
+                    .appendQueryParameter("Telefono_Cliente", telefonoCliente)
+                    .appendQueryParameter("Ciudad", ciudadEmpresa)
+                    .appendQueryParameter("Departamento", departamentoEmpresa);
 
             String query = builder.build().getEncodedQuery();
 
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter  (os, "UTF-8"));
+                    new OutputStreamWriter(os, "UTF-8"));
             writer.write(query);
             writer.flush();
             writer.close();
@@ -408,7 +410,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         @Override
         protected void onPreExecute() {
             progressDialog = ProgressDialog.show(FacturaActivity.this,
-                    "Cargando...","");
+                    "Cargando...", "");
             progressDialog.setCancelable(true);
         }
 

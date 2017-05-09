@@ -59,14 +59,14 @@ import java.util.TimeZone;
 public class ReportesActivity extends AppCompatActivity {
 
     public long idEmpresa;
-    public String nombreEmpresa,direccionEmpresa,telefonoEmpresa,nitEmpresa,nombresUsuario,apellidosUsuario,tipo,kilosTotales,valorPago,hora;
-    TextView tvPrueba,tvKilosTotales,tvDineroGastado;
-    String fecha,nit,fecha1,a,strFormatvalorPagoSeco;
+    public String nombreEmpresa, direccionEmpresa, telefonoEmpresa, nitEmpresa, nombresUsuario, apellidosUsuario, tipo, kilosTotales, valorPago, hora;
+    TextView tvPrueba, tvKilosTotales, tvDineroGastado;
+    String fecha, nit, fecha1, a, strFormatvalorPagoSeco;
 
 
     Button btnFecha;
     TextView tvFechaSeleccionada;
-    int dia,mes,año , length;
+    int dia, mes, año, length;
 
     public ArrayList<Factura> listFactura;
 
@@ -80,12 +80,13 @@ public class ReportesActivity extends AppCompatActivity {
 
     Double kilos = 0.0;
     Double valorpago = 0.0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reportes);
 
-        Toolbar toolbar = (Toolbar)findViewById(R.id.ToolbarReportes);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.ToolbarReportes);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("REPORTE DE FACTURAS");
@@ -96,13 +97,13 @@ public class ReportesActivity extends AppCompatActivity {
         db_facturas.abrirBaseDeDatos();
 
         //new CargarDatosHistoria().execute("http://iot.bitnamiapp.com:3000/factura");
-        btnFecha = (Button)findViewById(R.id.btnFecha);
-        tvFechaSeleccionada = (TextView)findViewById(R.id.tvFechaSeleccionada);
-        tvPrueba = (TextView)findViewById(R.id.tvPrueba);
-        tvKilosTotales = (TextView)findViewById(R.id.tvKilosTotales);
-        tvDineroGastado = (TextView)findViewById(R.id.tvDineroGastado);
+        btnFecha = (Button) findViewById(R.id.btnFecha);
+        tvFechaSeleccionada = (TextView) findViewById(R.id.tvFechaSeleccionada);
+        tvPrueba = (TextView) findViewById(R.id.tvPrueba);
+        tvKilosTotales = (TextView) findViewById(R.id.tvKilosTotales);
+        tvDineroGastado = (TextView) findViewById(R.id.tvDineroGastado);
 
-        nit = getIntent().getExtras().getString("nitEmpresa");
+        nit = getIntent().getExtras().getString("Nit_Empresa");
         //fecha = getIntent().getExtras().getString("fecha");
         //get current date
         Calendar c = Calendar.getInstance();
@@ -115,9 +116,9 @@ public class ReportesActivity extends AppCompatActivity {
         btnFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isOnlineNet()) {
+                if (isOnlineNet()) {
                     showDialog(111);
-                }else{
+                } else {
                     //Se muestra un alert dialog que indica que los datos son erróneos
                     final AlertDialog.Builder builder = new AlertDialog.Builder(ReportesActivity.this);
                     builder.setTitle("Alerta");
@@ -171,7 +172,6 @@ public class ReportesActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -193,7 +193,7 @@ public class ReportesActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener dateLPickerListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker arg0, int y, int m, int d) {
-            fecha1 = String.format("%02d/%02d/%04d",y,m+1,d);
+            fecha1 = String.format("%02d/%02d/%04d", y, m + 1, d);
             DateFormat dateFormatFH = new SimpleDateFormat("MM-dd-yyyy");
             Date dateFH = new Date(fecha1);
             fecha = dateFormatFH.format(dateFH);
@@ -201,12 +201,12 @@ public class ReportesActivity extends AppCompatActivity {
         }
     };
 
-    void mostrarFecha(){
-        tvFechaSeleccionada.setText(fecha+" (Mes-Día-Año)");
+    void mostrarFecha() {
+        tvFechaSeleccionada.setText(fecha + " (Mes-Día-Año)");
         tvPrueba.setText("");
         //imprimirDatos();
         makeServiceCallReportes(url);
-        if(list.size() > 0){
+        if (list.size() > 0) {
             list.clear();
         }
         kilos = 0.0;
@@ -221,7 +221,7 @@ public class ReportesActivity extends AppCompatActivity {
         try {
             Process p = java.lang.Runtime.getRuntime().exec("ping -c 1 www.google.es");
 
-            int val           = p.waitFor();
+            int val = p.waitFor();
             boolean reachable = (val == 0);
             return reachable;
 
@@ -305,11 +305,10 @@ public class ReportesActivity extends AppCompatActivity {
                     List<String> listContents = new ArrayList<String>(length);
 
                     int j = 0;
-                    for (int i = 0; i < length; i++)
-                    {
+                    for (int i = 0; i < length; i++) {
                         listContents.add(jsonArray.getString(i));
                         JSONObject c = jsonArray.getJSONObject(i);
-                        j = j +1 ;
+                        j = j + 1;
                         String nombreCompraventa = c.getString("Nombre_Compraventa");
                         String nitCompraVenta = c.getString("Nit_Compraventa");
                         String ciudadCompraVenta = c.getString("Ciudad");
@@ -326,33 +325,33 @@ public class ReportesActivity extends AppCompatActivity {
                         String nombresCliente = c.getString("Nombre_Cliente");
                         String cedulaCliente = c.getString("Cedula_Cliente");
                         String telefonoCliente = c.getString("Telefono_Cliente");
-                        HashMap<String,String> objetos = new HashMap<>();
-                        objetos.put("Numero_Factura","Factura "+j);
-                        objetos.put("Nombre_Compraventa",nombreCompraventa);
-                        objetos.put("Nit_Compraventa",nitCompraVenta);
-                        objetos.put("Direccion_Compraventa",direccionCompraventa);
-                        objetos.put("Telefono_Compraventa",telefonoCompaventa);
-                        objetos.put("Ciudad",ciudadCompraVenta);
-                        objetos.put("Nombre_Usuario",nombreUsuario);
-                        objetos.put("Apellido_Usuario",apellidoUsuario);
-                        objetos.put("Tipo_Cafe",tipoCafe);
-                        objetos.put("Kilos_Totales",kilosTotales);
-                        objetos.put("Valor_Pago",valorPago);
-                        objetos.put("Fecha_Venta",fechaVenta);
-                        objetos.put("Hora_Venta",horaVenta);
-                        objetos.put("Tipo_Movimiento",tipoMovimiento);
-                        objetos.put("Nombre_Cliente",nombresCliente);
-                        objetos.put("Cedula_Cliente",cedulaCliente);
-                        objetos.put("Telefono_Cliente",telefonoCliente);
-                        kilos = kilos + Double.parseDouble(kilosTotales.replace(",",""));
-                        valorpago = valorpago + Double.parseDouble(valorPago.replace(",",""));
+                        HashMap<String, String> objetos = new HashMap<>();
+                        objetos.put("Numero_Factura", "Factura " + j);
+                        objetos.put("Nombre_Compraventa", nombreCompraventa);
+                        objetos.put("Nit_Compraventa", nitCompraVenta);
+                        objetos.put("Direccion_Compraventa", direccionCompraventa);
+                        objetos.put("Telefono_Compraventa", telefonoCompaventa);
+                        objetos.put("Ciudad", ciudadCompraVenta);
+                        objetos.put("Nombre_Usuario", nombreUsuario);
+                        objetos.put("Apellido_Usuario", apellidoUsuario);
+                        objetos.put("Tipo_Cafe", tipoCafe);
+                        objetos.put("Kilos_Totales", kilosTotales);
+                        objetos.put("Valor_Pago", valorPago);
+                        objetos.put("Fecha_Venta", fechaVenta);
+                        objetos.put("Hora_Venta", horaVenta);
+                        objetos.put("Tipo_Movimiento", tipoMovimiento);
+                        objetos.put("Nombre_Cliente", nombresCliente);
+                        objetos.put("Cedula_Cliente", cedulaCliente);
+                        objetos.put("Telefono_Cliente", telefonoCliente);
+                        kilos = kilos + Double.parseDouble(kilosTotales.replace(",", ""));
+                        valorpago = valorpago + Double.parseDouble(valorPago.replace(",", ""));
                         list.add(objetos);
                     }
                     DecimalFormat formateador = new DecimalFormat("###,###.##");
                     strFormatvalorPagoSeco = formateador.format(valorpago);
 
 
-                }catch (final JSONException e) {
+                } catch (final JSONException e) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -385,17 +384,17 @@ public class ReportesActivity extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
             pDialog.dismiss();
-            if(length == 0){
+            if (length == 0) {
                 tvPrueba.setText("No hay registro de facturas en esta fecha");
             }
             adapter = new SimpleAdapter(
                     getApplicationContext(), list,
-                    R.layout.list_view_facturas, new String[]{"Numero_Factura","Nombre_Compraventa","Nit_Compraventa","Ciudad","Nombre_Usuario","Apellido_Usuario","Tipo_Cafe","Kilos_Totales","Valor_Pago","Fecha_Venta","Hora_Venta","Nombre_Cliente","Cedula_Cliente","Telefono_Cliente"}, new int[]{R.id.numerofactura,R.id.nombrecompraventa,R.id.nitcompraventa,R.id.ciudad,R.id.nombreusuario,R.id.apellidousuario,R.id.tipodecafe,R.id.kilostotales,R.id.valorpago,R.id.fecha,R.id.hora,R.id.nombrescliente,R.id.cedulacliente,R.id.telefonocliente
+                    R.layout.list_view_facturas, new String[]{"Numero_Factura", "Nombre_Compraventa", "Nit_Compraventa", "Ciudad", "Nombre_Usuario", "Apellido_Usuario", "Tipo_Cafe", "Kilos_Totales", "Valor_Pago", "Fecha_Venta", "Hora_Venta", "Nombre_Cliente", "Cedula_Cliente", "Telefono_Cliente"}, new int[]{R.id.numerofactura, R.id.nombrecompraventa, R.id.nitcompraventa, R.id.ciudad, R.id.nombreusuario, R.id.apellidousuario, R.id.tipodecafe, R.id.kilostotales, R.id.valorpago, R.id.fecha, R.id.hora, R.id.nombrescliente, R.id.cedulacliente, R.id.telefonocliente
             });
             ListView listView = (ListView) findViewById(R.id.listview);
             listView.setAdapter(adapter);
-            tvKilosTotales.setText("Kilos Totales Comprados: " +kilos);
-            tvDineroGastado.setText("Dinero total gastado: $" +strFormatvalorPagoSeco);
+            tvKilosTotales.setText("Kilos Totales Comprados: " + kilos);
+            tvDineroGastado.setText("Dinero total gastado: $" + strFormatvalorPagoSeco);
 
         }
 
@@ -410,7 +409,7 @@ public class ReportesActivity extends AppCompatActivity {
             conn.setDoOutput(true);
 
             Uri.Builder builder = new Uri.Builder()
-                    .appendQueryParameter("Fecha_Venta",fecha)
+                    .appendQueryParameter("Fecha_Venta", fecha)
                     .appendQueryParameter("Nit_Compraventa", nit);
             String query = builder.build().getEncodedQuery();
 

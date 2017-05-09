@@ -11,7 +11,6 @@
 
     <application
         android:allowBackup="false"
-        android:fullBackupContent="false"
         android:icon="@mipmap/ic_launcher"
         android:label="Compra Café"
         android:supportsRtl="true"
@@ -23,11 +22,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.RegisterActivityEmpresa" android:parentActivityName=".Activities.LoginActivity" />
+        <activity
+            android:name=".Activities.RegisterActivityEmpresa"
+            android:parentActivityName=".Activities.LoginActivity" />
         <activity android:name=".Activities.MainActivity" />
-        <activity android:name=".Activities.RegisterActivityUsuario" android:parentActivityName=".Activities.LoginActivity" />
-        <activity android:name=".Activities.FacturaActivity" android:parentActivityName=".Activities.MainActivity"/>
-        <activity android:name=".Activities.ReportesActivity"  android:parentActivityName=".Activities.MainActivity" />
+        <activity
+            android:name=".Activities.RegisterActivityUsuario"
+            android:parentActivityName=".Activities.LoginActivity" />
+        <activity
+            android:name=".Activities.FacturaActivity"
+            android:parentActivityName=".Activities.MainActivity" />
+        <activity
+            android:name=".Activities.ReportesActivity"
+            android:parentActivityName=".Activities.MainActivity" />
     </application>
 
 </manifest>

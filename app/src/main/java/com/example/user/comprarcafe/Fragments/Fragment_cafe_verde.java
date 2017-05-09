@@ -36,15 +36,16 @@ import java.util.List;
 import java.util.TimeZone;
 
 
-public class Fragment_cafe_verde extends Fragment{
+public class Fragment_cafe_verde extends Fragment {
 
-    private EditText edtKilosCargaVerde,edtPrecioCargaDiaVerde,edtGramosCafeMaloVerde;
-    private double precioCargaDiaVerde, valorCargaVerde, gramosMalosVerde, cafeDañadoVerde ,kilosCargaVerde,kilosBuenosVerde,precioCargaVerde, precioTotalCargaVerde;
+    private EditText edtKilosCargaVerde, edtPrecioCargaDiaVerde, edtGramosCafeMaloVerde;
+    private double precioCargaDiaVerde, valorCargaVerde, gramosMalosVerde, cafeDañadoVerde, kilosCargaVerde, kilosBuenosVerde, precioCargaVerde, precioTotalCargaVerde;
     private Button btnCostoCargaVerde;
-    private TextView fechaVerde,tvValorAPagar;
+    private TextView fechaVerde, tvValorAPagar;
     private TextClock textClockVerde;
-    public String VoC,strFechaVerde, strHoraVerde,strFechaHora, strTipo="café verde", strMuestraVerde = "100",nombresUsuario,apellidosUsuario,nombreEmpresa,direccionEmpresa,telefonoEmpresa,strFormatvalorPagoVerde,nitEmpresa,ciudadEmpresa,departamentoEmpresa;
-    public long idUsuario,idVenta,idEmpresa,id_usuario_logued;;
+    public String VoC, strFechaVerde, strHoraVerde, strFechaHora, strTipo = "café verde", strMuestraVerde = "100", nombresUsuario, apellidosUsuario, nombreEmpresa, direccionEmpresa, telefonoEmpresa, strFormatvalorPagoVerde, nitEmpresa, ciudadEmpresa, departamentoEmpresa;
+    public long idUsuario, idVenta, idEmpresa, id_usuario_logued;
+    private String Nombre_Empresa,Nit_Empresa,Direccion_Empresa,Telefono_Empresa,Departamento_Empresa,Ciudad_Empresa;
 
     //Instancia del controlador de ventas
     VentasController db_ventas;
@@ -64,12 +65,18 @@ public class Fragment_cafe_verde extends Fragment{
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v;
-        v = inflater.inflate(R.layout.fragment_cafe_verde,null);
+        v = inflater.inflate(R.layout.fragment_cafe_verde, null);
 
         idUsuario = getActivity().getIntent().getExtras().getLong("id");
         nombresUsuario = getActivity().getIntent().getExtras().getString("nombres");
         apellidosUsuario = getActivity().getIntent().getExtras().getString("apellidos");
         idEmpresa = getActivity().getIntent().getExtras().getLong("idEmpresa");
+        Nombre_Empresa = getActivity().getIntent().getExtras().getString("Nombre_Empresa");
+        Nit_Empresa = getActivity().getIntent().getExtras().getString("Nit_Empresa");
+        Direccion_Empresa = getActivity().getIntent().getExtras().getString("Direccion_Empresa");
+        Telefono_Empresa = getActivity().getIntent().getExtras().getString("Telefono_Empresa");
+        Departamento_Empresa = getActivity().getIntent().getExtras().getString("Departamento_Empresa");
+        Ciudad_Empresa = getActivity().getIntent().getExtras().getString("Ciudad_Empresa");
         id_usuario_logued = getActivity().getIntent().getExtras().getLong("id_usuario_logued");
 
         //Conexión al controlador de Ventas
@@ -92,13 +99,13 @@ public class Fragment_cafe_verde extends Fragment{
         db_clientes = new ClientesController(v.getContext());
         db_clientes.abrirBaseDeDatos();
 
-        fechaVerde = (TextView)v.findViewById(R.id.fechaVerde);
+        fechaVerde = (TextView) v.findViewById(R.id.fechaVerde);
 
-        edtKilosCargaVerde = (EditText)v.findViewById(R.id.edtKilosCargaVerde);
-        edtPrecioCargaDiaVerde = (EditText)v.findViewById(R.id.edtPrecioCargaDiaVerde);
-        edtGramosCafeMaloVerde = (EditText)v.findViewById(R.id.edtGramosCafeMaloVerde);
-        btnCostoCargaVerde = (Button)v.findViewById(R.id.btnCostoCargaVerde);
-        textClockVerde = (TextClock)v.findViewById(R.id.textClockVerde);
+        edtKilosCargaVerde = (EditText) v.findViewById(R.id.edtKilosCargaVerde);
+        edtPrecioCargaDiaVerde = (EditText) v.findViewById(R.id.edtPrecioCargaDiaVerde);
+        edtGramosCafeMaloVerde = (EditText) v.findViewById(R.id.edtGramosCafeMaloVerde);
+        btnCostoCargaVerde = (Button) v.findViewById(R.id.btnCostoCargaVerde);
+        textClockVerde = (TextClock) v.findViewById(R.id.textClockVerde);
 
         //Obtener Fecha
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -121,43 +128,43 @@ public class Fragment_cafe_verde extends Fragment{
             @Override
             public void onClick(View v) {
                 final String strKilosCargaVerde = edtKilosCargaVerde.getText().toString();
-                if(TextUtils.isEmpty(strKilosCargaVerde)){
+                if (TextUtils.isEmpty(strKilosCargaVerde)) {
                     edtKilosCargaVerde.setError("Llena este campo");
                     return;
                 }
                 final String strPrecioCargaDiaVerde = edtPrecioCargaDiaVerde.getText().toString();
-                if(TextUtils.isEmpty(strPrecioCargaDiaVerde)){
+                if (TextUtils.isEmpty(strPrecioCargaDiaVerde)) {
                     edtPrecioCargaDiaVerde.setError("Llena este campo");
                     return;
                 }
                 String strGramosCafeMaloVerde = edtGramosCafeMaloVerde.getText().toString();
-                if(TextUtils.isEmpty(strGramosCafeMaloVerde)){
+                if (TextUtils.isEmpty(strGramosCafeMaloVerde)) {
                     edtGramosCafeMaloVerde.setError("Llena este campo");
                     return;
                 }
                 precioCargaDiaVerde = Double.parseDouble(strPrecioCargaDiaVerde);
-                if(precioCargaDiaVerde < 100000){
+                if (precioCargaDiaVerde < 100000) {
                     edtPrecioCargaDiaVerde.setError("Ingrese un real precio de la carga del día");
                     return;
                 }
-                valorCargaVerde = precioCargaDiaVerde - (precioCargaDiaVerde*10/100);
-                valorCargaVerde = valorCargaVerde/2;
+                valorCargaVerde = precioCargaDiaVerde - (precioCargaDiaVerde * 10 / 100);
+                valorCargaVerde = valorCargaVerde / 2;
                 final String strValorCargaVerde = Double.toString(valorCargaVerde);
                 gramosMalosVerde = Double.parseDouble(strGramosCafeMaloVerde);
-                if(gramosMalosVerde > 15 || gramosMalosVerde < 0){
+                if (gramosMalosVerde > 15 || gramosMalosVerde < 0) {
                     edtGramosCafeMaloVerde.setError("Ingrese una cantidad de café malo aceptable");
                     return;
                 }
                 cafeDañadoVerde = gramosMalosVerde + 5;
                 final String strCafeDañadoVerde = Double.toString(cafeDañadoVerde);
                 kilosCargaVerde = Double.parseDouble(strKilosCargaVerde);
-                if(kilosCargaVerde <= 0){
+                if (kilosCargaVerde <= 0) {
                     edtKilosCargaVerde.setError("Ingrese una cantidad de kilos aceptable");
                     return;
                 }
-                kilosBuenosVerde = kilosCargaVerde -(kilosCargaVerde*cafeDañadoVerde/100);
+                kilosBuenosVerde = kilosCargaVerde - (kilosCargaVerde * cafeDañadoVerde / 100);
                 final String strKilosBuenosVerde = Double.toString(kilosBuenosVerde);
-                precioCargaVerde = valorCargaVerde - (valorCargaVerde * cafeDañadoVerde/100);
+                precioCargaVerde = valorCargaVerde - (valorCargaVerde * cafeDañadoVerde / 100);
                 precioTotalCargaVerde = kilosCargaVerde * precioCargaVerde / 125;
                 DecimalFormat formateador = new DecimalFormat("###,###.##");
                 strFormatvalorPagoVerde = formateador.format(precioTotalCargaVerde);
@@ -165,7 +172,7 @@ public class Fragment_cafe_verde extends Fragment{
 
                 //Toast.makeText(getActivity(),"idusuario:"+idUsuario+"nombresUsuario:"+nombresUsuario+"apellidosUsuario:"+apellidosUsuario+"idEmpresa:"+idEmpresa,Toast.LENGTH_LONG).show();
                 //ALERT DIALOG
-                View dialogo = inflater.inflate(R.layout.dialogo_personalizado,null);
+                View dialogo = inflater.inflate(R.layout.dialogo_personalizado, null);
                 //COMENTAR VOC
                 /*final List<String> arraySpinner = new ArrayList<String>();
                 arraySpinner.add("COMPRAR");
@@ -183,14 +190,14 @@ public class Fragment_cafe_verde extends Fragment{
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {}
                 }); */
-                final EditText edtNombresCliente = (EditText)dialogo.findViewById(R.id.edtNombreCliente);
-                final EditText edtCedulaCliente = (EditText)dialogo.findViewById(R.id.edtCedulaCliente);
-                final EditText edtTelefonoCliente = (EditText)dialogo.findViewById(R.id.edtTelefonoCliente);
+                final EditText edtNombresCliente = (EditText) dialogo.findViewById(R.id.edtNombreCliente);
+                final EditText edtCedulaCliente = (EditText) dialogo.findViewById(R.id.edtCedulaCliente);
+                final EditText edtTelefonoCliente = (EditText) dialogo.findViewById(R.id.edtTelefonoCliente);
                 //final EditText edtDireccionCliente = (EditText)dialogo.findViewById(R.id.edtDireccionCliente);
-                tvValorAPagar = (TextView)dialogo.findViewById(R.id.tvValorAPagar);
+                tvValorAPagar = (TextView) dialogo.findViewById(R.id.tvValorAPagar);
                 tvValorAPagar.setText(strFormatvalorPagoVerde);
 
-                Button btnGenerarFactura = (Button)dialogo.findViewById(R.id.btnGenerarFactura);
+                Button btnGenerarFactura = (Button) dialogo.findViewById(R.id.btnGenerarFactura);
 
                 btnGenerarFactura.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -199,15 +206,15 @@ public class Fragment_cafe_verde extends Fragment{
                         final String cedulaCliente = edtCedulaCliente.getText().toString();
                         final String telefonoCliente = edtTelefonoCliente.getText().toString();
                         //final String direccionCliente = edtDireccionCliente.getText().toString();
-                        if(TextUtils.isEmpty(nombresCliente)){
+                        if (TextUtils.isEmpty(nombresCliente)) {
                             edtNombresCliente.setError("Llena este campo");
                             return;
                         }
-                        if(TextUtils.isEmpty(cedulaCliente)){
+                        if (TextUtils.isEmpty(cedulaCliente)) {
                             edtCedulaCliente.setError("Llena este campo");
                             return;
                         }
-                        if(TextUtils.isEmpty(telefonoCliente)){
+                        if (TextUtils.isEmpty(telefonoCliente)) {
                             edtTelefonoCliente.setError("Llena este campo");
                             return;
                         }
@@ -216,7 +223,7 @@ public class Fragment_cafe_verde extends Fragment{
                             return;
                         }*/
                         //Inserción de datos en la tabla de ventas
-                        db_ventas.insertDataVentas(idUsuario,strFechaVerde,strHoraVerde,strPrecioCargaDiaVerde,strKilosCargaVerde,strPrecioTotalCargaVerde,strTipo,strMuestraVerde);
+                        db_ventas.insertDataVentas(idUsuario, strFechaVerde, strHoraVerde, strPrecioCargaDiaVerde, strKilosCargaVerde, strPrecioTotalCargaVerde, strTipo, strMuestraVerde);
                         idVenta = db_ventas.findVentasByUsuario(idUsuario);
                         //Toast.makeText(getActivity(),"idUsuario"+idUsuario+"idVenta:"+idVenta,Toast.LENGTH_SHORT).show();
                         nombreEmpresa = db_empresas.findNombreEmpresaById(idEmpresa);
@@ -226,33 +233,33 @@ public class Fragment_cafe_verde extends Fragment{
                         ciudadEmpresa = db_empresas.findCiudadEmpresaById(idEmpresa);
                         departamentoEmpresa = db_empresas.findDepartamentoEmpresaById(idEmpresa);
                         //Insertando datos en la tabla de clientes
-                        db_clientes.insertDataClientes(nombresCliente,cedulaCliente,telefonoCliente,null);
+                        db_clientes.insertDataClientes(nombresCliente, cedulaCliente, telefonoCliente, null);
                         //Inserción de datos en la tabla de café verde
                         //TODO agregar descuento estándar verde y Variedad
-                        db_cafe_verde.insertDataCafeVerde(idVenta,"10",strCafeDañadoVerde,null,strMuestraVerde,strKilosBuenosVerde,strValorCargaVerde,strPrecioTotalCargaVerde);
+                        db_cafe_verde.insertDataCafeVerde(idVenta, "10", strCafeDañadoVerde, null, strMuestraVerde, strKilosBuenosVerde, strValorCargaVerde, strPrecioTotalCargaVerde);
                         Intent i = new Intent(getActivity(), FacturaActivity.class);
-                        i.putExtra("idUsuario",idUsuario);
-                        i.putExtra("idVenta",idVenta);
-                        i.putExtra("idEmpresa",idEmpresa);
-                        i.putExtra("nombreEmpresa",nombreEmpresa);
-                        i.putExtra("direccionEmpresa",direccionEmpresa);
-                        i.putExtra("telefonoEmpresa",telefonoEmpresa);
-                        i.putExtra("nitEmpresa",nitEmpresa);
-                        i.putExtra("departamentoEmpresa",departamentoEmpresa);
-                        i.putExtra("ciudadEmpresa",ciudadEmpresa);
-                        i.putExtra("nombresUsuario",nombresUsuario);
-                        i.putExtra("apellidosUsuario",apellidosUsuario);
-                        i.putExtra("tipo",strTipo);
-                        i.putExtra("kilosTotalesVerde",strKilosCargaVerde);
-                        i.putExtra("valorPagoVerde",strFormatvalorPagoVerde);
-                        i.putExtra("doubleValorPagoVerde",precioTotalCargaVerde);
-                        i.putExtra("nombresCliente",nombresCliente);
-                        i.putExtra("cedulaCliente",cedulaCliente);
-                        i.putExtra("telefonoCliente",telefonoCliente);
+                        i.putExtra("idUsuario", idUsuario);
+                        i.putExtra("idVenta", idVenta);
+                        i.putExtra("idEmpresa", idEmpresa);
+                        i.putExtra("nombreEmpresa", Nombre_Empresa);
+                        i.putExtra("direccionEmpresa", Direccion_Empresa);
+                        i.putExtra("telefonoEmpresa", Telefono_Empresa);
+                        i.putExtra("nitEmpresa", Nit_Empresa);
+                        i.putExtra("departamentoEmpresa", Departamento_Empresa);
+                        i.putExtra("ciudadEmpresa", Ciudad_Empresa);
+                        i.putExtra("nombresUsuario", nombresUsuario);
+                        i.putExtra("apellidosUsuario", apellidosUsuario);
+                        i.putExtra("tipo", strTipo);
+                        i.putExtra("kilosTotalesVerde", strKilosCargaVerde);
+                        i.putExtra("valorPagoVerde", strFormatvalorPagoVerde);
+                        i.putExtra("doubleValorPagoVerde", precioTotalCargaVerde);
+                        i.putExtra("nombresCliente", nombresCliente);
+                        i.putExtra("cedulaCliente", cedulaCliente);
+                        i.putExtra("telefonoCliente", telefonoCliente);
                         //i.putExtra("direccionCliente",direccionCliente);
-                        i.putExtra("fecha",strFechaVerde);
-                        i.putExtra("hora",strHoraVerde);
-                        i.putExtra("fechahora",strFechaHora);
+                        i.putExtra("fecha", strFechaVerde);
+                        i.putExtra("hora", strHoraVerde);
+                        i.putExtra("fechahora", strFechaHora);
                         //i.putExtra("VoC",VoC);
                         startActivity(i);
                     }

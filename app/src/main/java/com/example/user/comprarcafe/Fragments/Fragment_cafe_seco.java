@@ -1,7 +1,10 @@
 package com.example.user.comprarcafe.Fragments;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.preference.PreferenceManager;
@@ -20,6 +23,7 @@ import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.user.comprarcafe.Activities.ReportesActivity;
 import com.example.user.comprarcafe.Controllers.CafeSecoController;
 import com.example.user.comprarcafe.Controllers.ClientesController;
 import com.example.user.comprarcafe.Controllers.EmpresasController;
@@ -28,6 +32,18 @@ import com.example.user.comprarcafe.Controllers.VentasController;
 import com.example.user.comprarcafe.Activities.FacturaActivity;
 import com.example.user.comprarcafe.R;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -39,16 +55,18 @@ import java.util.TimeZone;
 
 public class Fragment_cafe_seco extends Fragment {
 
-    private EditText edtKilosCargaSeco,edtPrecioCargaDiaSeco,edtGramosCafeBuenoSeco,edtTara;
-    private double kilosCargaSeco, gramosCafeBuenoSeco, merma,factor,dif_factor,precioCargaDiaSeco,valorCargaSeco,tara,kilosFinalesSeco,valorKiloSeco,valorPagoSeco;
-    private int muestreo = 250, constante = 17500 , factor_estandar = 88;
-    private Button btnCostoCargaSeco,btnImprimirFacturaSeco;
-    private TextView fechaSeco,tvValorAPagar;
+    private EditText edtKilosCargaSeco, edtPrecioCargaDiaSeco, edtGramosCafeBuenoSeco, edtTara;
+    private double kilosCargaSeco, gramosCafeBuenoSeco, merma, factor, dif_factor, precioCargaDiaSeco, valorCargaSeco, tara, kilosFinalesSeco, valorKiloSeco, valorPagoSeco;
+    private int muestreo = 250, constante = 17500, factor_estandar = 88;
+    private Button btnCostoCargaSeco, btnImprimirFacturaSeco;
+    private TextView fechaSeco, tvValorAPagar;
     private TextClock textClockSeco;
-    public String strTipo = "café seco",strFecha,strHora, strFechaHora,nombresUsuario,apellidosUsuario,nombreEmpresa,strFormatvalorPagoSeco,direccionEmpresa,telefonoEmpresa,nitEmpresa,ciudadEmpresa,departamentoEmpresa;
-    public long idUsuario,idEmpresa,id_usuario_logued;
+    public String strTipo = "café seco", strFecha, strHora, strFechaHora, nombresUsuario, apellidosUsuario, nombreEmpresa, strFormatvalorPagoSeco, direccionEmpresa, telefonoEmpresa, nitEmpresa, ciudadEmpresa, departamentoEmpresa;
+    public long idUsuario, idEmpresa, id_usuario_logued;
     public long idVenta;
     public String VoC;
+    ProgressDialog pDialog;
+    private String Nombre_Empresa,Nit_Empresa,Direccion_Empresa,Telefono_Empresa,Departamento_Empresa,Ciudad_Empresa;
 
     /*public ArrayAdapter<String> adaptersC;
     public ArrayList<String> spinnerCV;*/
@@ -74,12 +92,18 @@ public class Fragment_cafe_seco extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v;
-        v = inflater.inflate(R.layout.fragment_cafe_seco,null);
+        v = inflater.inflate(R.layout.fragment_cafe_seco, null);
 
         idUsuario = getActivity().getIntent().getExtras().getLong("id");
         nombresUsuario = getActivity().getIntent().getExtras().getString("nombres");
         apellidosUsuario = getActivity().getIntent().getExtras().getString("apellidos");
         idEmpresa = getActivity().getIntent().getExtras().getLong("idEmpresa");
+        Nombre_Empresa = getActivity().getIntent().getExtras().getString("Nombre_Empresa");
+        Nit_Empresa = getActivity().getIntent().getExtras().getString("Nit_Empresa");
+        Direccion_Empresa = getActivity().getIntent().getExtras().getString("Direccion_Empresa");
+        Telefono_Empresa = getActivity().getIntent().getExtras().getString("Telefono_Empresa");
+        Departamento_Empresa = getActivity().getIntent().getExtras().getString("Departamento_Empresa");
+        Ciudad_Empresa = getActivity().getIntent().getExtras().getString("Ciudad_Empresa");
         id_usuario_logued = getActivity().getIntent().getExtras().getLong("id_usuario_logued");
 
         //Conexión al controlador de Ventas
@@ -102,14 +126,14 @@ public class Fragment_cafe_seco extends Fragment {
         db_clientes = new ClientesController(v.getContext());
         db_clientes.abrirBaseDeDatos();
 
-        edtKilosCargaSeco = (EditText)v.findViewById(R.id.edtKilosCargaSeco);
-        edtPrecioCargaDiaSeco = (EditText)v.findViewById(R.id.edtPrecioCargaDiaSeco);
-        edtGramosCafeBuenoSeco = (EditText)v.findViewById(R.id.edtGramosCafeBuenoSeco);
-        edtTara = (EditText)v.findViewById(R.id.edtTara);
-        fechaSeco = (TextView)v.findViewById(R.id.fechaSeco);
+        edtKilosCargaSeco = (EditText) v.findViewById(R.id.edtKilosCargaSeco);
+        edtPrecioCargaDiaSeco = (EditText) v.findViewById(R.id.edtPrecioCargaDiaSeco);
+        edtGramosCafeBuenoSeco = (EditText) v.findViewById(R.id.edtGramosCafeBuenoSeco);
+        edtTara = (EditText) v.findViewById(R.id.edtTara);
+        fechaSeco = (TextView) v.findViewById(R.id.fechaSeco);
         textClockSeco = (TextClock) v.findViewById(R.id.textClockSeco);
 
-        btnCostoCargaSeco = (Button)v.findViewById(R.id.btnCostoCargaSeco);
+        btnCostoCargaSeco = (Button) v.findViewById(R.id.btnCostoCargaSeco);
 
         //Obtener Fecha
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -133,73 +157,73 @@ public class Fragment_cafe_seco extends Fragment {
             @Override
             public void onClick(View v) {
                 String strKilosCargaSeco = edtKilosCargaSeco.getText().toString();
-                if(TextUtils.isEmpty(strKilosCargaSeco)){
+                if (TextUtils.isEmpty(strKilosCargaSeco)) {
                     edtKilosCargaSeco.setError("Llena este campo");
                     return;
                 }
                 final String strPrecioCargaDiaSeco = edtPrecioCargaDiaSeco.getText().toString();
-                if(TextUtils.isEmpty(strPrecioCargaDiaSeco)){
+                if (TextUtils.isEmpty(strPrecioCargaDiaSeco)) {
                     edtPrecioCargaDiaSeco.setError("Llena este campo");
                     return;
                 }
                 final String strGramosCafeBuenoSeco = edtGramosCafeBuenoSeco.getText().toString();
-                if(TextUtils.isEmpty(strGramosCafeBuenoSeco)){
+                if (TextUtils.isEmpty(strGramosCafeBuenoSeco)) {
                     edtGramosCafeBuenoSeco.setError("Llena este campo");
                     return;
                 }
                 final String strTara = edtTara.getText().toString();
-                if(TextUtils.isEmpty(strTara)){
+                if (TextUtils.isEmpty(strTara)) {
                     edtTara.setError("Llena este campo");
                     return;
                 }
                 //valor de los kilos de carga total
                 kilosCargaSeco = Double.parseDouble(strKilosCargaSeco);
-                if(kilosCargaSeco <= 0){
+                if (kilosCargaSeco <= 0) {
                     edtKilosCargaSeco.setError("Ingrese una cantidad de kilos aceptable");
                     return;
                 }
                 //valor de los gramos de café bueno que se obtiene
                 gramosCafeBuenoSeco = Double.parseDouble(strGramosCafeBuenoSeco);
-                if(gramosCafeBuenoSeco >= 250  || gramosCafeBuenoSeco <170){
+                if (gramosCafeBuenoSeco >= 250 || gramosCafeBuenoSeco < 170) {
                     edtGramosCafeBuenoSeco.setError("Ingrese una cantidad de café bueno aceptable");
                     return;
                 }
                 //Cálculo de la merma
-                merma = (muestreo- gramosCafeBuenoSeco) /2.5;
+                merma = (muestreo - gramosCafeBuenoSeco) / 2.5;
                 final String strMerma = Double.toString(merma);
                 //Cálculo del factor de calidad
-                factor = constante/gramosCafeBuenoSeco;
+                factor = constante / gramosCafeBuenoSeco;
                 final String strFactor = String.format("%.1f", factor);
                 factor = Double.parseDouble(strFactor);
                 //Cálculo de la diferencia entre factores
                 dif_factor = factor - factor_estandar;
                 //valor de la carga de café del día
                 precioCargaDiaSeco = Double.parseDouble(strPrecioCargaDiaSeco);
-                if(precioCargaDiaSeco < 100000){
+                if (precioCargaDiaSeco < 100000) {
                     edtPrecioCargaDiaSeco.setError("Ingrese un real precio de la carga del día");
                     return;
                 }
                 //Condicionales del factor de calidad para hacer descuento o no
-                if(factor >88 && factor<=92.8 ){
-                    valorCargaSeco = precioCargaDiaSeco+(precioCargaDiaSeco*dif_factor/100);
-                }else if(factor == 88){
+                if (factor > 88 && factor <= 92.8) {
+                    valorCargaSeco = precioCargaDiaSeco + (precioCargaDiaSeco * dif_factor / 100);
+                } else if (factor == 88) {
                     valorCargaSeco = precioCargaDiaSeco;
-                }else if(factor>92.8){
-                    valorCargaSeco = precioCargaDiaSeco-(precioCargaDiaSeco*dif_factor/100);
+                } else if (factor > 92.8) {
+                    valorCargaSeco = precioCargaDiaSeco - (precioCargaDiaSeco * dif_factor / 100);
                 }
                 tara = Double.parseDouble(strTara);
-                if(tara > 70 || tara < 0){
+                if (tara > 70 || tara < 0) {
                     edtTara.setError("Ingrese una tara aceptable");
                     return;
                 }
-                if(kilosCargaSeco < 80){
+                if (kilosCargaSeco < 80) {
                     tara = 0;
                 }
                 kilosFinalesSeco = kilosCargaSeco - tara;
                 final String strKilosFinalesSeco = Double.toString(kilosFinalesSeco);
                 final String strValorCargaSeco = Double.toString(valorCargaSeco);
                 //Valor de un kilo
-                valorKiloSeco = valorCargaSeco/125;
+                valorKiloSeco = valorCargaSeco / 125;
                 final String strvalorKiloSeco = Double.toString(valorKiloSeco);
                 //Valor a pagar
                 valorPagoSeco = kilosFinalesSeco * valorKiloSeco;
@@ -213,7 +237,7 @@ public class Fragment_cafe_seco extends Fragment {
 
 
                 //ALERT DIALOG
-                View dialogo = inflater.inflate(R.layout.dialogo_personalizado,null);
+                View dialogo = inflater.inflate(R.layout.dialogo_personalizado, null);
                 //TODO QUITAR VOC, MEJOR INTERFAZ ACTIVIDAD FACTURA, MEJORAR ACTIVIDAD REPORTES
                 //COMENTAR VOC
                 /*final List<String> arraySpinner = new ArrayList<String>();
@@ -233,16 +257,16 @@ public class Fragment_cafe_seco extends Fragment {
                     public void onNothingSelected(AdapterView<?> parent) {}
                 }); */
 
-                final EditText edtNombresCliente = (EditText)dialogo.findViewById(R.id.edtNombreCliente);
-                final EditText edtCedulaCliente = (EditText)dialogo.findViewById(R.id.edtCedulaCliente);
-                final EditText edtTelefonoCliente = (EditText)dialogo.findViewById(R.id.edtTelefonoCliente);
+                final EditText edtNombresCliente = (EditText) dialogo.findViewById(R.id.edtNombreCliente);
+                final EditText edtCedulaCliente = (EditText) dialogo.findViewById(R.id.edtCedulaCliente);
+                final EditText edtTelefonoCliente = (EditText) dialogo.findViewById(R.id.edtTelefonoCliente);
 
                 //TODO MÁS VALIDACIONES DE LOS DATOS QUE SE INGRESAN PORQUE POR EJEMPLO PUEDEN SUPERAR LA CAPACIDAD DE ALMACENAMIENTO
                 //final EditText edtDireccionCliente = (EditText)dialogo.findViewById(R.id.edtDireccionCliente);
-                tvValorAPagar = (TextView)dialogo.findViewById(R.id.tvValorAPagar);
+                tvValorAPagar = (TextView) dialogo.findViewById(R.id.tvValorAPagar);
                 tvValorAPagar.setText(strFormatvalorPagoSeco);
 
-                Button btnGenerarFactura = (Button)dialogo.findViewById(R.id.btnGenerarFactura);
+                Button btnGenerarFactura = (Button) dialogo.findViewById(R.id.btnGenerarFactura);
                 btnGenerarFactura.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -251,15 +275,15 @@ public class Fragment_cafe_seco extends Fragment {
                         final String telefonoCliente = edtTelefonoCliente.getText().toString();
                         //final String direccionCliente = edtDireccionCliente.getText().toString();
 
-                        if(TextUtils.isEmpty(nombresCliente)){
+                        if (TextUtils.isEmpty(nombresCliente)) {
                             edtNombresCliente.setError("Llena este campo");
                             return;
                         }
-                        if(TextUtils.isEmpty(cedulaCliente)){
+                        if (TextUtils.isEmpty(cedulaCliente)) {
                             edtCedulaCliente.setError("Llena este campo");
                             return;
                         }
-                        if(TextUtils.isEmpty(telefonoCliente)){
+                        if (TextUtils.isEmpty(telefonoCliente)) {
                             edtTelefonoCliente.setError("Llena este campo");
                             return;
                         }
@@ -269,7 +293,7 @@ public class Fragment_cafe_seco extends Fragment {
                         }*/
 
                         //Inserción de datos en la tabla de ventas
-                        db_ventas.insertDataVentas(idUsuario,strFecha,strHora,strPrecioCargaDiaSeco,strKilosFinalesSeco,strvalorPagoSeco,strTipo,strMuestra);
+                        db_ventas.insertDataVentas(idUsuario, strFecha, strHora, strPrecioCargaDiaSeco, strKilosFinalesSeco, strvalorPagoSeco, strTipo, strMuestra);
                         //Toast.makeText(getActivity(),""+idUsuario,Toast.LENGTH_SHORT).show();
 
                         idVenta = db_ventas.findVentasByUsuario(idUsuario);
@@ -283,33 +307,33 @@ public class Fragment_cafe_seco extends Fragment {
                         departamentoEmpresa = db_empresas.findDepartamentoEmpresaById(idEmpresa);
                         //Toast.makeText(getActivity(),departamentoEmpresa,Toast.LENGTH_SHORT).show();
                         //Insertando datos en la tabla de clientes
-                        db_clientes.insertDataClientes(nombresCliente,cedulaCliente,telefonoCliente,null);
+                        db_clientes.insertDataClientes(nombresCliente, cedulaCliente, telefonoCliente, null);
                         //Inserción de datos en la tabla de café seco
                         //TODO agregar variedad
-                        db_cafe_seco.insertDataCafeSeco(idVenta,strGramosCafeBuenoSeco,strMerma,strFactor,strConstante,strDifFactor,strTara,strKilosFinalesSeco,strvalorKiloSeco,strvalorPagoSeco,null,strMuestra,strValorCargaSeco);
+                        db_cafe_seco.insertDataCafeSeco(idVenta, strGramosCafeBuenoSeco, strMerma, strFactor, strConstante, strDifFactor, strTara, strKilosFinalesSeco, strvalorKiloSeco, strvalorPagoSeco, null, strMuestra, strValorCargaSeco);
                         Intent i = new Intent(getActivity(), FacturaActivity.class);
-                        i.putExtra("idUsuario",idUsuario);
-                        i.putExtra("idVenta",idVenta);
-                        i.putExtra("idEmpresa",idEmpresa);
-                        i.putExtra("nombreEmpresa",nombreEmpresa);
-                        i.putExtra("direccionEmpresa",direccionEmpresa);
-                        i.putExtra("telefonoEmpresa",telefonoEmpresa);
-                        i.putExtra("departamentoEmpresa",departamentoEmpresa);
-                        i.putExtra("ciudadEmpresa",ciudadEmpresa);
-                        i.putExtra("nitEmpresa",nitEmpresa);
-                        i.putExtra("nombresUsuario",nombresUsuario);
-                        i.putExtra("apellidosUsuario",apellidosUsuario);
-                        i.putExtra("tipo",strTipo);
-                        i.putExtra("kilosTotalesSeco",strKilosFinalesSeco);
-                        i.putExtra("valorPagoSeco",strFormatvalorPagoSeco);
-                        i.putExtra("doubleValorPagoSeco",valorPagoSeco);
-                        i.putExtra("nombresCliente",nombresCliente);
-                        i.putExtra("cedulaCliente",cedulaCliente);
-                        i.putExtra("telefonoCliente",telefonoCliente);
+                        i.putExtra("idUsuario", idUsuario);
+                        i.putExtra("idVenta", idVenta);
+                        i.putExtra("idEmpresa", idEmpresa);
+                        i.putExtra("nombreEmpresa", Nombre_Empresa);
+                        i.putExtra("direccionEmpresa", Direccion_Empresa);
+                        i.putExtra("telefonoEmpresa", Telefono_Empresa);
+                        i.putExtra("departamentoEmpresa", Departamento_Empresa);
+                        i.putExtra("ciudadEmpresa", Ciudad_Empresa);
+                        i.putExtra("nitEmpresa", Nit_Empresa);
+                        i.putExtra("nombresUsuario", nombresUsuario);
+                        i.putExtra("apellidosUsuario", apellidosUsuario);
+                        i.putExtra("tipo", strTipo);
+                        i.putExtra("kilosTotalesSeco", strKilosFinalesSeco);
+                        i.putExtra("valorPagoSeco", strFormatvalorPagoSeco);
+                        i.putExtra("doubleValorPagoSeco", valorPagoSeco);
+                        i.putExtra("nombresCliente", nombresCliente);
+                        i.putExtra("cedulaCliente", cedulaCliente);
+                        i.putExtra("telefonoCliente", telefonoCliente);
                         //i.putExtra("direccionCliente",direccionCliente);
-                        i.putExtra("fecha",strFecha);
-                        i.putExtra("hora",strHora);
-                        i.putExtra("fechahora",strFechaHora);
+                        i.putExtra("fecha", strFecha);
+                        i.putExtra("hora", strHora);
+                        i.putExtra("fechahora", strFechaHora);
                         //i.putExtra("VoC",VoC);
                         startActivity(i);
                     }
@@ -328,6 +352,68 @@ public class Fragment_cafe_seco extends Fragment {
     }
 
 
+    /*private class GetDatosEmpresa extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+            pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Cargando...");
+            pDialog.setCancelable(true);
+            pDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            String jsonStr = makeServiceCallEmpresa("http://iot.bitnamiapp.com:3000/unidad_productiva/:id");
+
+
+        }
+    } */
+
+
+        public String makeServiceCallEmpresa(String reqUrl) {
+            String response = null;
+            try {
+                URL url = new URL(reqUrl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+
+                // read the response
+                InputStream in = new BufferedInputStream(conn.getInputStream());
+                response = convertStreamToString(in);
+            } catch (MalformedURLException e) {
+                //Log.e(TAG, "MalformedURLException: " + e.getMessage());
+            } catch (ProtocolException e) {
+                //Log.e(TAG, "ProtocolException: " + e.getMessage());
+            } catch (IOException e) {
+                //Log.e(TAG, "IOException: " + e.getMessage());
+            } catch (Exception e) {
+                //Log.e(TAG, "Exception: " + e.getMessage());
+            }
+            return response;
+        }
+
+        private String convertStreamToString(InputStream is) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+
+            String line;
+            try {
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line).append('\n');
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return sb.toString();
+        }
 
 
 

@@ -15,7 +15,7 @@ public class EmpresasController {
     private SQLiteDBHelper dbHelper;
     private Context context;
     private SQLiteDatabase database;
-    public String nombreEmpresa,direccionEmpresa,telefonoEmpresa,nitEmpresa,estadoEmpresa,ciudadEmpresa,departamentoEmpresa;
+    public String nombreEmpresa, direccionEmpresa, telefonoEmpresa, nitEmpresa, estadoEmpresa, ciudadEmpresa, departamentoEmpresa;
 
     public EmpresasController(Context c) {
         context = c;
@@ -32,16 +32,16 @@ public class EmpresasController {
     }
 
     //Método para insertar los datos del formulario en la tabla de Empresa
-    public void InsertDataEmpresas(String strNombreCompraVenta,String strNit,String strDireccionCompraVenta, String strTelefonoCompraVenta,String strDepartamentoCompraVenta, String strCiudadCompraVenta){
+    public void InsertDataEmpresas(String strNombreCompraVenta, String strNit, String strDireccionCompraVenta, String strTelefonoCompraVenta, String strDepartamentoCompraVenta, String strCiudadCompraVenta) {
         ContentValues values = new ContentValues();
-        values.put(SQLiteDBHelper. COLUMN_NOMBRE_EMPRESA,strNombreCompraVenta);
-        values.put(SQLiteDBHelper.COLUMN_NIT,strNit);
-        values.put(SQLiteDBHelper.COLUMN_DIRECCION_EMPRESA,strDireccionCompraVenta);
-        values.put(SQLiteDBHelper.COLUMN_TELEFONO_EMPRESA,strTelefonoCompraVenta);
-        values.put(SQLiteDBHelper.COLUMN_DEPARTAMENTO_EMPRESA,strDepartamentoCompraVenta);
-        values.put(SQLiteDBHelper.COLUMN_CIUDAD_EMPRESA,strCiudadCompraVenta);
+        values.put(SQLiteDBHelper.COLUMN_NOMBRE_EMPRESA, strNombreCompraVenta);
+        values.put(SQLiteDBHelper.COLUMN_NIT, strNit);
+        values.put(SQLiteDBHelper.COLUMN_DIRECCION_EMPRESA, strDireccionCompraVenta);
+        values.put(SQLiteDBHelper.COLUMN_TELEFONO_EMPRESA, strTelefonoCompraVenta);
+        values.put(SQLiteDBHelper.COLUMN_DEPARTAMENTO_EMPRESA, strDepartamentoCompraVenta);
+        values.put(SQLiteDBHelper.COLUMN_CIUDAD_EMPRESA, strCiudadCompraVenta);
         //values.put(SQLiteDBHelper. COLUMN_ESTADO_EMPRESA,estadoEmpresa);
-        long id = database.insert(SQLiteDBHelper.TABLE_NAME_EMPRESAS,null,values);
+        long id = database.insert(SQLiteDBHelper.TABLE_NAME_EMPRESAS, null, values);
     }
 
     //Método para cargar empresas
@@ -49,15 +49,15 @@ public class EmpresasController {
         dbHelper = new SQLiteDBHelper(context);
         database = dbHelper.getWritableDatabase();
         ArrayList<Empresa> empresa = new ArrayList<Empresa>();
-        String select = "select * from "+SQLiteDBHelper.TABLE_NAME_EMPRESAS;
+        String select = "select * from " + SQLiteDBHelper.TABLE_NAME_EMPRESAS;
         Cursor cursor = database.rawQuery(select, null);
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
-                Empresa getsetempresa= new Empresa();
+                Empresa getsetempresa = new Empresa();
                 getsetempresa.setIdEmpresa(cursor.getInt(0));
                 getsetempresa.setNombreEmpresa(cursor.getString(1));
                 empresa.add(getsetempresa);
-            }while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
         return empresa;
     }
@@ -67,10 +67,10 @@ public class EmpresasController {
 
         dbHelper = new SQLiteDBHelper(context);
         database = dbHelper.getWritableDatabase();
-        String select = "select * from "+SQLiteDBHelper.TABLE_NAME_EMPRESAS;
+        String select = "select * from " + SQLiteDBHelper.TABLE_NAME_EMPRESAS;
         Cursor cursor = database.rawQuery(select, null);
         ArrayList<Empresa> list = new ArrayList<>();
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             Empresa empresa = cursorToNote(cursor);
             list.add(empresa);
         }
@@ -84,7 +84,7 @@ public class EmpresasController {
         empresa.setNombreEmpresa(cursor.getString(1));
         empresa.setNIT(cursor.getString(2));
         empresa.setDireccionEmpresa(cursor.getString(3));
-        empresa.setTelefonoEmpresa(cursor.getInt(4));
+        empresa.setTelefonoEmpresa(cursor.getString(4));
         empresa.setDepartamentoEmpresa(cursor.getString(5));
         empresa.setCiudadEmpresa(cursor.getString(6));
         //empresa.setEstadoEmpresa(cursor.getString(5));
@@ -96,77 +96,77 @@ public class EmpresasController {
         dbHelper = new SQLiteDBHelper(context);
         database = dbHelper.getWritableDatabase();
 
-        String select = "select * from "+SQLiteDBHelper.TABLE_NAME_EMPRESAS+" where "+SQLiteDBHelper.COLUMN_NOMBRE_EMPRESA+" = '"+nombreEmpresa+"'";
+        String select = "select * from " + SQLiteDBHelper.TABLE_NAME_EMPRESAS + " where " + SQLiteDBHelper.COLUMN_NOMBRE_EMPRESA + " = '" + nombreEmpresa + "'";
         Cursor cursor = database.rawQuery(select, null);
         ArrayList<Empresa> list = new ArrayList<>();
-        if(cursor.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             Empresa empresa = cursorToNote(cursor);
             list.add(empresa);
         }
         return list;
     }
 
-    public String findNombreEmpresaById (Long idEmpresa){
+    public String findNombreEmpresaById(Long idEmpresa) {
         dbHelper = new SQLiteDBHelper(context);
         database = dbHelper.getWritableDatabase();
-        String select ="select * from " +SQLiteDBHelper.TABLE_NAME_EMPRESAS+" where "+ SQLiteDBHelper.COLUMN_ID_EMPRESA+" = '"+idEmpresa+"'";
-        Cursor cursor = database.rawQuery(select,null);
-        if(cursor.moveToFirst()){
+        String select = "select * from " + SQLiteDBHelper.TABLE_NAME_EMPRESAS + " where " + SQLiteDBHelper.COLUMN_ID_EMPRESA + " = '" + idEmpresa + "'";
+        Cursor cursor = database.rawQuery(select, null);
+        if (cursor.moveToFirst()) {
             nombreEmpresa = cursor.getString(cursor.getColumnIndex(SQLiteDBHelper.COLUMN_NOMBRE_EMPRESA));
         }
         return nombreEmpresa;
     }
 
-    public String findDireccionEmpresaById (Long idEmpresa){
+    public String findDireccionEmpresaById(Long idEmpresa) {
         dbHelper = new SQLiteDBHelper(context);
         database = dbHelper.getWritableDatabase();
-        String select ="select * from " +SQLiteDBHelper.TABLE_NAME_EMPRESAS+" where "+ SQLiteDBHelper.COLUMN_ID_EMPRESA+" = '"+idEmpresa+"'";
-        Cursor cursor = database.rawQuery(select,null);
-        if(cursor.moveToFirst()){
+        String select = "select * from " + SQLiteDBHelper.TABLE_NAME_EMPRESAS + " where " + SQLiteDBHelper.COLUMN_ID_EMPRESA + " = '" + idEmpresa + "'";
+        Cursor cursor = database.rawQuery(select, null);
+        if (cursor.moveToFirst()) {
             direccionEmpresa = cursor.getString(cursor.getColumnIndex(SQLiteDBHelper.COLUMN_DIRECCION_EMPRESA));
         }
         return direccionEmpresa;
     }
 
-    public String findTelefonoEmpresaById (Long idEmpresa){
+    public String findTelefonoEmpresaById(Long idEmpresa) {
         dbHelper = new SQLiteDBHelper(context);
         database = dbHelper.getWritableDatabase();
-        String select ="select * from " +SQLiteDBHelper.TABLE_NAME_EMPRESAS+" where "+ SQLiteDBHelper.COLUMN_ID_EMPRESA+" = '"+idEmpresa+"'";
-        Cursor cursor = database.rawQuery(select,null);
-        if(cursor.moveToFirst()){
+        String select = "select * from " + SQLiteDBHelper.TABLE_NAME_EMPRESAS + " where " + SQLiteDBHelper.COLUMN_ID_EMPRESA + " = '" + idEmpresa + "'";
+        Cursor cursor = database.rawQuery(select, null);
+        if (cursor.moveToFirst()) {
             telefonoEmpresa = cursor.getString(cursor.getColumnIndex(SQLiteDBHelper.COLUMN_TELEFONO_EMPRESA));
         }
         return telefonoEmpresa;
     }
 
-    public String findNitEmpresaById (Long idEmpresa){
+    public String findNitEmpresaById(Long idEmpresa) {
         dbHelper = new SQLiteDBHelper(context);
         database = dbHelper.getWritableDatabase();
-        String select ="select * from " +SQLiteDBHelper.TABLE_NAME_EMPRESAS+" where "+ SQLiteDBHelper.COLUMN_ID_EMPRESA+" = '"+idEmpresa+"'";
-        Cursor cursor = database.rawQuery(select,null);
-        if(cursor.moveToFirst()){
+        String select = "select * from " + SQLiteDBHelper.TABLE_NAME_EMPRESAS + " where " + SQLiteDBHelper.COLUMN_ID_EMPRESA + " = '" + idEmpresa + "'";
+        Cursor cursor = database.rawQuery(select, null);
+        if (cursor.moveToFirst()) {
             nitEmpresa = cursor.getString(cursor.getColumnIndex(SQLiteDBHelper.COLUMN_NIT));
         }
         return nitEmpresa;
     }
 
-    public String findCiudadEmpresaById (Long idEmpresa){
+    public String findCiudadEmpresaById(Long idEmpresa) {
         dbHelper = new SQLiteDBHelper(context);
         database = dbHelper.getWritableDatabase();
-        String select ="select * from " +SQLiteDBHelper.TABLE_NAME_EMPRESAS+" where "+ SQLiteDBHelper.COLUMN_ID_EMPRESA+" = '"+idEmpresa+"'";
-        Cursor cursor = database.rawQuery(select,null);
-        if(cursor.moveToFirst()){
+        String select = "select * from " + SQLiteDBHelper.TABLE_NAME_EMPRESAS + " where " + SQLiteDBHelper.COLUMN_ID_EMPRESA + " = '" + idEmpresa + "'";
+        Cursor cursor = database.rawQuery(select, null);
+        if (cursor.moveToFirst()) {
             ciudadEmpresa = cursor.getString(cursor.getColumnIndex(SQLiteDBHelper.COLUMN_CIUDAD_EMPRESA));
         }
         return ciudadEmpresa;
     }
 
-    public String findDepartamentoEmpresaById (Long idEmpresa){
+    public String findDepartamentoEmpresaById(Long idEmpresa) {
         dbHelper = new SQLiteDBHelper(context);
         database = dbHelper.getWritableDatabase();
-        String select ="select * from " +SQLiteDBHelper.TABLE_NAME_EMPRESAS+" where "+ SQLiteDBHelper.COLUMN_ID_EMPRESA+" = '"+idEmpresa+"'";
-        Cursor cursor = database.rawQuery(select,null);
-        if(cursor.moveToFirst()){
+        String select = "select * from " + SQLiteDBHelper.TABLE_NAME_EMPRESAS + " where " + SQLiteDBHelper.COLUMN_ID_EMPRESA + " = '" + idEmpresa + "'";
+        Cursor cursor = database.rawQuery(select, null);
+        if (cursor.moveToFirst()) {
             departamentoEmpresa = cursor.getString(cursor.getColumnIndex(SQLiteDBHelper.COLUMN_DEPARTAMENTO_EMPRESA));
         }
         return departamentoEmpresa;

@@ -44,6 +44,7 @@ public class Fragment_cafe_pasilla extends Fragment {
     private TextClock textClockHoraPasilla;
     private String VoC,strFechaPasilla, strHoraPasilla, strFechaHora, strTipo = "café pasilla",strMuestraPasilla = "250",nombresUsuario,apellidosUsuario,nombreEmpresa,direccionEmpresa,telefonoEmpresa,nitEmpresa,ciudadEmpresa,departamentoEmpresa;
     long idUsuario, idVenta,idEmpresa,id_usuario_logued;
+    private String Nombre_Empresa,Nit_Empresa,Direccion_Empresa,Telefono_Empresa,Departamento_Empresa,Ciudad_Empresa;
 
     //Instancia del controlador de ventas
     VentasController db_ventas;
@@ -69,6 +70,12 @@ public class Fragment_cafe_pasilla extends Fragment {
         nombresUsuario = getActivity().getIntent().getExtras().getString("nombres");
         apellidosUsuario = getActivity().getIntent().getExtras().getString("apellidos");
         idEmpresa = getActivity().getIntent().getExtras().getLong("idEmpresa");
+        Nombre_Empresa = getActivity().getIntent().getExtras().getString("Nombre_Empresa");
+        Nit_Empresa = getActivity().getIntent().getExtras().getString("Nit_Empresa");
+        Direccion_Empresa = getActivity().getIntent().getExtras().getString("Direccion_Empresa");
+        Telefono_Empresa = getActivity().getIntent().getExtras().getString("Telefono_Empresa");
+        Departamento_Empresa = getActivity().getIntent().getExtras().getString("Departamento_Empresa");
+        Ciudad_Empresa = getActivity().getIntent().getExtras().getString("Ciudad_Empresa");
         id_usuario_logued = getActivity().getIntent().getExtras().getLong("id_usuario_logued");
 
         //Conexión al controlador de Ventas
@@ -230,12 +237,12 @@ public class Fragment_cafe_pasilla extends Fragment {
                         i.putExtra("idUsuario",idUsuario);
                         i.putExtra("idVenta",idVenta);
                         i.putExtra("idEmpresa",idEmpresa);
-                        i.putExtra("nombreEmpresa",nombreEmpresa);
-                        i.putExtra("direccionEmpresa",direccionEmpresa);
-                        i.putExtra("telefonoEmpresa",telefonoEmpresa);
-                        i.putExtra("nitEmpresa",nitEmpresa);
-                        i.putExtra("departamentoEmpresa",departamentoEmpresa);
-                        i.putExtra("ciudadEmpresa",ciudadEmpresa);
+                        i.putExtra("nombreEmpresa",Nombre_Empresa);
+                        i.putExtra("direccionEmpresa",Direccion_Empresa);
+                        i.putExtra("telefonoEmpresa",Telefono_Empresa);
+                        i.putExtra("nitEmpresa",Nit_Empresa);
+                        i.putExtra("departamentoEmpresa",Departamento_Empresa);
+                        i.putExtra("ciudadEmpresa",Ciudad_Empresa);
                         i.putExtra("nombresUsuario",nombresUsuario);
                         i.putExtra("apellidosUsuario",apellidosUsuario);
                         i.putExtra("tipo",strTipo);

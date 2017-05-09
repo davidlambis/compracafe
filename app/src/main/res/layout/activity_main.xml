@@ -17,14 +17,18 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/ToolbarPrincipal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
         <!-- Fin de la Toolbar-->
 
         <!-- Inicio de la TabLayout-->
         <android.support.design.widget.TabLayout
             android:id="@+id/TabLayoutPrincipal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:tabMaxWidth="0dp"
+            app:tabGravity="fill"
+            app:tabMode="fixed"/>
         <!-- Fin de la TabLayout-->
 
     </android.support.design.widget.AppBarLayout>

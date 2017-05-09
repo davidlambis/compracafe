@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.user.comprarcafe.Controllers.EmpresasController;
 import com.example.user.comprarcafe.Handler.HttpHandler;
+import com.example.user.comprarcafe.Models.Empresa;
 import com.example.user.comprarcafe.R;
 
 import org.json.JSONArray;
@@ -136,7 +137,8 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
          //Insertar datos en la base de datos de Empresa, llamando al método InsertDataEmpresas
          //if(isOnlineNet()) {
          new CargarDatosHistoria().execute("http://iot.bitnamiapp.com:3000/unidad_productiva_nit");
-         new CargarDatosHistoriaP().execute("http://iot.bitnamiapp.com:3000/unidad_productiva");
+
+         //
          //}else{
          //estadoEmpresa="0";
          //db_empresas.InsertDataEmpresas(strNombreCompraventa, strNit, strDireccionCompraVenta, strTelefonoCompraVenta);
@@ -168,22 +170,6 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
      }
     }
 
-    /*private void loadSpinnerDepartamentos() {
-
-        // Create an ArrayAdapter using the string array and a default spinner
-        // layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.departamentos, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        this.departamentos.setAdapter(adapter);
-
-        // This activity implements the AdapterView.OnItemSelectedListener
-        departamentos.setOnItemSelectedListener(this);
-        municipios.setOnItemSelectedListener(this);
-
-    } */
 
     //Método de validación de conexión a internet
     public Boolean isOnlineNet() {
@@ -323,29 +309,6 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
         return new String(buffer);
     }
 
-    /*public String readIt(InputStream stream, int len) throws IOException {
-        char[] buffer = new char[len];
-        InputStreamReader reader = new InputStreamReader(stream,"UTF-8");
-        int hasRead = 0;
-        while (hasRead < len)
-            hasRead += reader.read(buffer, hasRead, len-hasRead);
-
-        stream.close();
-    }*/
-
-    /*public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-        String result = "";
-        InputStreamReader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
-        char[] buffer = new char[len];
-        while(reader.read(buffer) >= 0)
-        {
-            result = result + (new String(buffer));
-            buffer = new char[len];
-        }
-        return result;
-    } */
-
     private class CargarDatosHistoria extends AsyncTask<String, Void, String> {
 
         ProgressDialog progressDialog;
@@ -382,15 +345,25 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
                     nit = c.getString("nit_unidad_productiva");
                 }
                 if(nit != null){
-                    Toast.makeText(getApplicationContext(),"No se puede registrar la empresa porque ya aparece registrada",Toast.LENGTH_SHORT).show();
-                    edtNit.setError("Ya aparece registrada");
+                    Intent intent = getIntent();
+                    finish();
+                    startActivity(intent);
+                    Toast.makeText(getApplicationContext(),"No se puede registrar la empresa porque ya aparece registrada",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Ingresa de nuevo los datos",Toast.LENGTH_SHORT).show();
                 }
-                else{
+                if(nit == null){
                     //estadoEmpresa = "1"; // Ya se han subido los datos a la nube.
                     db_empresas.InsertDataEmpresas(strNombreCompraventa,strNit,strDireccionCompraVenta,strTelefonoCompraVenta,departamentoSeleccionado,ciudadSeleccionada);
+                    new CargarDatosHistoriaP().execute("http://iot.bitnamiapp.com:3000/unidad_productiva");
                     //Toast.makeText(getApplicationContext(),"Ciudad:"+strCiudadCompraVenta,Toast.LENGTH_SHORT).show();
                     Toast.makeText(getApplicationContext(), "Datos de empresa registrados correctamente, registra tus datos de usuario para poder iniciar sesión", Toast.LENGTH_LONG).show();
                     Intent i = new Intent(getApplicationContext(),RegisterActivityUsuario .class);
+                    i.putExtra("Nombre_Empresa",strNombreCompraventa);
+                    i.putExtra("Nit_Empresa",strNit);
+                    i.putExtra("Direccion_Empresa",strDireccionCompraVenta);
+                    i.putExtra("Telefono_Empresa",strTelefonoCompraVenta);
+                    i.putExtra("Departamento_Empresa",departamentoSeleccionado);
+                    i.putExtra("Ciudad_Empresa",ciudadSeleccionada);
                     startActivity(i);
                     finish();
                 }
@@ -502,7 +475,6 @@ public class RegisterActivityEmpresa extends AppCompatActivity implements OnClic
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     departamentoSeleccionado = spinnerDepartamentos.get(position);
                     new GetCiudadesByDepartamento().execute();
-
                 }
 
                 @Override

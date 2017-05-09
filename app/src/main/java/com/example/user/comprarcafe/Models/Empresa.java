@@ -5,8 +5,8 @@ public class Empresa {
     private String nombreEmpresa;
     private String NIT;
     private String direccionEmpresa;
-    private int telefonoEmpresa;
-    private String estadoEmpresa;
+    private String telefonoEmpresa;
+   // private String estadoEmpresa;
     private String departamentoEmpresa;
     private String ciudadEmpresa;
 
@@ -16,7 +16,7 @@ public class Empresa {
         this.NIT = NIT;
         this.direccionEmpresa = direccionEmpresa;
         this.telefonoEmpresa = telefonoEmpresa;
-        this.estadoEmpresa = estadoEmpresa;
+        //this.estadoEmpresa = estadoEmpresa;
         this.departamentoEmpresa = departamentoEmpresa;
         this.ciudadEmpresa = ciudadEmpresa;
     }
@@ -53,21 +53,21 @@ public class Empresa {
         this.direccionEmpresa = direccionEmpresa;
     }
 
-    public int getTelefonoEmpresa() {
+    public String getTelefonoEmpresa() {
         return telefonoEmpresa;
     }
 
-    public void setTelefonoEmpresa(int telefonoEmpresa) {
+    public void setTelefonoEmpresa(String telefonoEmpresa) {
         this.telefonoEmpresa = telefonoEmpresa;
     }
 
-    public String getEstadoEmpresa() {
+    /*public String getEstadoEmpresa() {
         return estadoEmpresa;
     }
 
     public void setEstadoEmpresa(String estadoEmpresa) {
         this.estadoEmpresa = estadoEmpresa;
-    }
+    }*/
 
     public String getDepartamentoEmpresa() {
         return departamentoEmpresa;
