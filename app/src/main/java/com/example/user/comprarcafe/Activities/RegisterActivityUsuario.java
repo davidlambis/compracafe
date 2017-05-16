@@ -9,9 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -44,14 +42,14 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class RegisterActivityUsuario extends AppCompatActivity implements OnClickListener {
 
+    //Variables
     private EditText edtNombresUsuario, edtApellidosUsuario, edtCedulaUsuario, edtDireccionUsuario, edtTelefonoUsuario, edtCorreoUsuario, edtContraseñaUsuario;
     private Button btnRegistroUsuario;
-    private String estadoEmpresa,strNombresUsuario,strApellidosUsuario,strCedulaUsuario,strDireccionUsuario,strTelefonoUsuario,strCorreoUsuario,strContraseñaUsuario,estado_sesion,strIdEmpresa,correo,correo2;
+    private String strNombresUsuario,strApellidosUsuario,strCedulaUsuario,strDireccionUsuario,strTelefonoUsuario,strCorreoUsuario,strContraseñaUsuario,estado_sesion,strIdEmpresa,correo;
     private String nombreEmpresa,nitEmpresa,direccionEmpresa,telefonoEmpresa,departamentoEmpresa,ciudadEmpresa;
     Usuario usuario;
 
@@ -69,13 +67,13 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
 
     ArrayList<Empresa> numero_empresas;
 
-    //TODO DECLARAR URL
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_usuario);
 
+        //Coloca título al toolbar y habilita el retorno a la actividad anterior
         Toolbar toolbar = (Toolbar) findViewById(R.id.ToolbarRegistroUsuario);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -93,6 +91,7 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
 
         numero_empresas = db_empresas.findAllEmpresas();
 
+        //Llamado a objetos del layout
         edtNombresUsuario = (EditText) findViewById(R.id.edtNombresUsuario);
         edtApellidosUsuario = (EditText) findViewById(R.id.edtApellidosUsuario);
         edtCedulaUsuario = (EditText) findViewById(R.id.edtCedulaUsuario);
@@ -103,9 +102,11 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
         btnRegistroUsuario = (Button) findViewById(R.id.btnRegistroUsuario);
         spinner = (Spinner) findViewById(R.id.spinnerU);
 
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                //Obtiene el id de empresa que se muestra en el spinner
                 idEmpresa = listEmpresa.get(position).getIdEmpresa();
                 usuario = new Usuario();
                 usuario.setIdEmpresa(idEmpresa);
@@ -120,6 +121,7 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
         spinnerEmpresas = new ArrayList<>();
         refresh();
 
+        //Si el usuario da click en registrar usuario sin haber registrado una empresa, redirecciona a la pantalla de registro de empresa
         adaptersEmpresas = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinnerEmpresas);
         if (adaptersEmpresas.getCount() == 0) {
             Toast.makeText(this, "No se ha registrado ninguna empresa,regístra tu compraventa para crear usuario", Toast.LENGTH_LONG).show();
@@ -128,9 +130,8 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
             finish();
         }
 
-        ///ListLecturas.setAdapter(adapters);
         spinner.setAdapter(adaptersEmpresas);
-        //spinner.setVisibility(View.GONE);
+        //Listener del boton de registrar usuario
         btnRegistroUsuario.setOnClickListener(this);
 
 
@@ -156,6 +157,7 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
 
     @Override
     public void onClick(View v) {
+        //Valida que todos los campos estén diligenciados correctamente
         strNombresUsuario = edtNombresUsuario.getText().toString();
         if (TextUtils.isEmpty(strNombresUsuario)) {
             edtNombresUsuario.setError("Llena este campo");
@@ -193,14 +195,7 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
             return;
         }
         //Validar si existe el correo
-        //TODO VALIDAR EN LA NUBE
         if(numero_empresas.size() > 0) {
-            /*nombreEmpresa = getIntent().getExtras().getString("Nombre_Empresa");
-            nitEmpresa = getIntent().getExtras().getString("Nit_Empresa");
-            direccionEmpresa = getIntent().getExtras().getString("Direccion_Empresa");
-            telefonoEmpresa = getIntent().getExtras().getString("Telefono_Empresa");
-            departamentoEmpresa = getIntent().getExtras().getString("Departamento_Empresa");
-            ciudadEmpresa = getIntent().getExtras().getString("Ciudad_Empresa");*/
             nombreEmpresa = db_empresas.findNombreEmpresaById(idEmpresa);
             nitEmpresa = db_empresas.findNitEmpresaById(idEmpresa);
             direccionEmpresa = db_empresas.findDireccionEmpresaById(idEmpresa);
@@ -210,44 +205,12 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
         }
 
         estado_sesion = "0";
+        //Ejecuta la tarea asíncrona que valida que el correo esté registrado.
         new validaCorreoUsuario().execute();
 
-
-        /*if(correo != null) {
-            Toast.makeText(getApplicationContext(), "No se puede registrar porque el correo ya está registrado", Toast.LENGTH_SHORT).show();
-            edtCorreoUsuario.setError("Ya está registrado");
-        }*/
-
-
-
-        /*ArrayList correo = db_usuarios.findUsuario(strCorreoUsuario);
-        if (correo.size() != 0) {
-            edtCorreoUsuario.setError("Este correo ya está registrado");
-        } else {
-            new posteaUsuario().execute();
-            estado_sesion = "0";
-            //Insertar datos en la base de datos de usuarios, llamando al método InsertDataUsuarios(creado manualmente)
-            db_usuarios.InsertDataUsuarios(idEmpresa, strNombresUsuario, strApellidosUsuario, strCedulaUsuario, strDireccionUsuario, strTelefonoUsuario, strCorreoUsuario, strContraseñaUsuario, estado_sesion);
-            //Dialogo de alerta estableciendo que se ha registrado correctamente
-
-            final AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivityUsuario.this);
-            builder.setTitle("Bien");
-            builder.setMessage("Te has registrado correctamente, puedes iniciar sesión");
-            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    Intent intent = new Intent(RegisterActivityUsuario.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        } */
     }
 
-    //Validar si el correo ya está registrado
-
+    //Valida si el correo ya está registrado
     private class validaCorreoUsuario extends AsyncTask<String, Void, String> {
 
         ProgressDialog progressDialog;
@@ -284,6 +247,7 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
         protected void onPostExecute(String result) {
             progressDialog.dismiss();
 
+            //Si correo es null quiere decir que no ha sido registrado
             if(correo == null){
                 String estado_sesion = "0";
                 //Insertar datos en la base de datos de usuarios, llamando al método InsertDataUsuarios(creado manualmente)
@@ -307,6 +271,7 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
             }
 
             if(correo != null) {
+                //Si el correo es distinto de null, quiere decir que ya ha sido registrado
                 Intent intent = getIntent();
                 finish();
                 startActivity(intent);
@@ -314,45 +279,13 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
                 Toast.makeText(getApplicationContext(),"Ingresa de nuevo los datos",Toast.LENGTH_SHORT).show();
             }
 
-            /*if(correo != null){
-                Toast.makeText(getApplicationContext(),"No se puede registrar porque el correo ya está registrado",Toast.LENGTH_SHORT).show();
-                edtCorreoUsuario.setError("Ya está registrado");
-            }*/
-
-
-          /*  if(correo == null){
-                String estado_sesion = "0";
-                //Insertar datos en la base de datos de usuarios, llamando al método InsertDataUsuarios(creado manualmente)
-                new posteaUsuario().execute();
-                db_usuarios.InsertDataUsuarios(idEmpresa, strNombresUsuario, strApellidosUsuario, strCedulaUsuario, strDireccionUsuario, strTelefonoUsuario, strCorreoUsuario, strContraseñaUsuario, estado_sesion);
-                //Dialogo de alerta estableciendo que se ha registrado correctamente
-
-                final AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivityUsuario.this);
-                builder.setTitle("Bien");
-                builder.setMessage("Te has registrado correctamente, puedes iniciar sesión");
-                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(RegisterActivityUsuario.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-
-            if(correo != null){
-                Toast.makeText(getApplicationContext(),"No se puede registrar porque el correo ya está registrado",Toast.LENGTH_SHORT).show();
-                edtCorreoUsuario.setError("Ya está registrado");
-            } */
-
 
         }
 
 
     }
 
+    //Hace un POST con el dato de correo ingresado por el usuario
      public String makeServiceCallUsuariosCorreo(String reqUrl) {
         String response = null;
         try {
@@ -389,17 +322,9 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
     }
 
     //POSTEO DE DATOS DE USUARIOS
-    //POSTEO
+    // Tare asíncrona de POSTEO o subida
     private class posteaUsuario extends AsyncTask<String, Void, String> {
 
-        /*ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(RegisterActivityUsuario.this,
-                    "Cargando...","");
-            progressDialog.setCancelable(true);
-        } */
 
         @Override
         protected String doInBackground(String... urls) {
@@ -415,6 +340,7 @@ public class RegisterActivityUsuario extends AppCompatActivity implements OnClic
 
     }
 
+    // Método que pasa todos los parámetros obtenidos del usuario a la nube
     public String makeServiceCallUsuarios(String reqUrl) {
         String response = null;
         try {

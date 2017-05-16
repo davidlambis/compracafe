@@ -1,6 +1,5 @@
 package com.example.user.comprarcafe.Fragments;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,14 +8,10 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextClock;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.user.comprarcafe.Activities.FacturaActivity;
 import com.example.user.comprarcafe.Controllers.CafeVerdeController;
@@ -29,23 +24,22 @@ import com.example.user.comprarcafe.R;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 
 public class Fragment_cafe_verde extends Fragment {
 
+    //Variables
     private EditText edtKilosCargaVerde, edtPrecioCargaDiaVerde, edtGramosCafeMaloVerde;
     private double precioCargaDiaVerde, valorCargaVerde, gramosMalosVerde, cafeDañadoVerde, kilosCargaVerde, kilosBuenosVerde, precioCargaVerde, precioTotalCargaVerde;
     private Button btnCostoCargaVerde;
     private TextView fechaVerde, tvValorAPagar;
     private TextClock textClockVerde;
-    public String VoC, strFechaVerde, strHoraVerde, strFechaHora, strTipo = "café verde", strMuestraVerde = "100", nombresUsuario, apellidosUsuario, nombreEmpresa, direccionEmpresa, telefonoEmpresa, strFormatvalorPagoVerde, nitEmpresa, ciudadEmpresa, departamentoEmpresa;
+    public String strFechaVerde, strHoraVerde, strFechaHora, strTipo = "café verde", strMuestraVerde = "100", nombresUsuario, apellidosUsuario, nombreEmpresa, direccionEmpresa, telefonoEmpresa, strFormatvalorPagoVerde, nitEmpresa, ciudadEmpresa, departamentoEmpresa;
     public long idUsuario, idVenta, idEmpresa, id_usuario_logued;
-    private String Nombre_Empresa,Nit_Empresa,Direccion_Empresa,Telefono_Empresa,Departamento_Empresa,Ciudad_Empresa;
+    private String Nombre_Empresa, Nit_Empresa, Direccion_Empresa, Telefono_Empresa, Departamento_Empresa, Ciudad_Empresa;
 
     //Instancia del controlador de ventas
     VentasController db_ventas;
@@ -67,6 +61,7 @@ public class Fragment_cafe_verde extends Fragment {
         View v;
         v = inflater.inflate(R.layout.fragment_cafe_verde, null);
 
+        //Obtención de datos de usuario por getIntent() que vienen del MainActivity
         idUsuario = getActivity().getIntent().getExtras().getLong("id");
         nombresUsuario = getActivity().getIntent().getExtras().getString("nombres");
         apellidosUsuario = getActivity().getIntent().getExtras().getString("apellidos");
@@ -99,8 +94,8 @@ public class Fragment_cafe_verde extends Fragment {
         db_clientes = new ClientesController(v.getContext());
         db_clientes.abrirBaseDeDatos();
 
+        //Llamado de objetos del layout
         fechaVerde = (TextView) v.findViewById(R.id.fechaVerde);
-
         edtKilosCargaVerde = (EditText) v.findViewById(R.id.edtKilosCargaVerde);
         edtPrecioCargaDiaVerde = (EditText) v.findViewById(R.id.edtPrecioCargaDiaVerde);
         edtGramosCafeMaloVerde = (EditText) v.findViewById(R.id.edtGramosCafeMaloVerde);
@@ -124,6 +119,7 @@ public class Fragment_cafe_verde extends Fragment {
         strFechaHora = dateFormatFH.format(dateFH);
 
 
+        //Listener del botón de calcular
         btnCostoCargaVerde.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,30 +166,13 @@ public class Fragment_cafe_verde extends Fragment {
                 strFormatvalorPagoVerde = formateador.format(precioTotalCargaVerde);
                 final String strPrecioTotalCargaVerde = Double.toString(precioTotalCargaVerde);
 
-                //Toast.makeText(getActivity(),"idusuario:"+idUsuario+"nombresUsuario:"+nombresUsuario+"apellidosUsuario:"+apellidosUsuario+"idEmpresa:"+idEmpresa,Toast.LENGTH_LONG).show();
-                //ALERT DIALOG
+
+                //Infla un dialogo con el layout de dialogo personalizado donde se piden datos del cliente para completar los datos de la factura
                 View dialogo = inflater.inflate(R.layout.dialogo_personalizado, null);
                 //COMENTAR VOC
-                /*final List<String> arraySpinner = new ArrayList<String>();
-                arraySpinner.add("COMPRAR");
-                arraySpinner.add("VENDER");
-                Spinner spinnerC = (Spinner)dialogo.findViewById(R.id.spinnerC);
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
-                spinnerC.setAdapter(adapter);
-                spinnerC.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        VoC = arraySpinner.get(position);
-                        Toast.makeText(getActivity(),"Voc:"+VoC,Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {}
-                }); */
                 final EditText edtNombresCliente = (EditText) dialogo.findViewById(R.id.edtNombreCliente);
                 final EditText edtCedulaCliente = (EditText) dialogo.findViewById(R.id.edtCedulaCliente);
                 final EditText edtTelefonoCliente = (EditText) dialogo.findViewById(R.id.edtTelefonoCliente);
-                //final EditText edtDireccionCliente = (EditText)dialogo.findViewById(R.id.edtDireccionCliente);
                 tvValorAPagar = (TextView) dialogo.findViewById(R.id.tvValorAPagar);
                 tvValorAPagar.setText(strFormatvalorPagoVerde);
 
@@ -205,7 +184,6 @@ public class Fragment_cafe_verde extends Fragment {
                         final String nombresCliente = edtNombresCliente.getText().toString();
                         final String cedulaCliente = edtCedulaCliente.getText().toString();
                         final String telefonoCliente = edtTelefonoCliente.getText().toString();
-                        //final String direccionCliente = edtDireccionCliente.getText().toString();
                         if (TextUtils.isEmpty(nombresCliente)) {
                             edtNombresCliente.setError("Llena este campo");
                             return;
@@ -218,14 +196,11 @@ public class Fragment_cafe_verde extends Fragment {
                             edtTelefonoCliente.setError("Llena este campo");
                             return;
                         }
-                        /*if(TextUtils.isEmpty(direccionCliente)){
-                            edtDireccionCliente.setError("Llena este campo");
-                            return;
-                        }*/
+
                         //Inserción de datos en la tabla de ventas
                         db_ventas.insertDataVentas(idUsuario, strFechaVerde, strHoraVerde, strPrecioCargaDiaVerde, strKilosCargaVerde, strPrecioTotalCargaVerde, strTipo, strMuestraVerde);
                         idVenta = db_ventas.findVentasByUsuario(idUsuario);
-                        //Toast.makeText(getActivity(),"idUsuario"+idUsuario+"idVenta:"+idVenta,Toast.LENGTH_SHORT).show();
+                        //Halla estos datos en base al idEmpresa asignado
                         nombreEmpresa = db_empresas.findNombreEmpresaById(idEmpresa);
                         direccionEmpresa = db_empresas.findDireccionEmpresaById(idEmpresa);
                         telefonoEmpresa = db_empresas.findTelefonoEmpresaById(idEmpresa);
@@ -235,8 +210,8 @@ public class Fragment_cafe_verde extends Fragment {
                         //Insertando datos en la tabla de clientes
                         db_clientes.insertDataClientes(nombresCliente, cedulaCliente, telefonoCliente, null);
                         //Inserción de datos en la tabla de café verde
-                        //TODO agregar descuento estándar verde y Variedad
                         db_cafe_verde.insertDataCafeVerde(idVenta, "10", strCafeDañadoVerde, null, strMuestraVerde, strKilosBuenosVerde, strValorCargaVerde, strPrecioTotalCargaVerde);
+                        //Inicia actividad de factura y pasa todos los datos a esa actividad mediante el intent.
                         Intent i = new Intent(getActivity(), FacturaActivity.class);
                         i.putExtra("idUsuario", idUsuario);
                         i.putExtra("idVenta", idVenta);
@@ -256,11 +231,9 @@ public class Fragment_cafe_verde extends Fragment {
                         i.putExtra("nombresCliente", nombresCliente);
                         i.putExtra("cedulaCliente", cedulaCliente);
                         i.putExtra("telefonoCliente", telefonoCliente);
-                        //i.putExtra("direccionCliente",direccionCliente);
                         i.putExtra("fecha", strFechaVerde);
                         i.putExtra("hora", strHoraVerde);
                         i.putExtra("fechahora", strFechaHora);
-                        //i.putExtra("VoC",VoC);
                         startActivity(i);
                     }
                 });
@@ -269,7 +242,6 @@ public class Fragment_cafe_verde extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setView(dialogo);
                 builder.setTitle("Factura");
-                //builder.setMessage("El valor a pagar es de: $"+strFormatvalorPagoVerde);
                 builder.show();
 
 

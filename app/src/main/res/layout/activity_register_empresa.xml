@@ -105,6 +105,7 @@
                     android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
 
+         <!-- Departamentos -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,6 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></Spinner>
 
+         <!-- Municipios -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -138,6 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></Spinner>
 
+         <!-- Botón Registrar Empresa -->
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btnRegistroEmpresa"
                 android:layout_width="wrap_content"

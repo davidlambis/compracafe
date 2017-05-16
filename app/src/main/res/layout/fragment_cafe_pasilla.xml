@@ -1,42 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:orientation="vertical"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:paddingRight="24dp"
+        android:paddingTop="20dp">
 
         <!-- Fecha y hora -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/tvFechaPasilla"
-                android:text = "Fecha : "/>
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:id="@+id/fechaPasilla"/>
+                android:text="Fecha : " />
+
             <TextView
+                android:id="@+id/fechaPasilla"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <TextView
                 android:id="@+id/tvHoraPasilla"
-                android:text = "Hora : "/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hora : " />
+
             <TextClock
                 android:id="@+id/textClockPasilla"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:format12Hour="hh:mm:ss a"
                 android:layout_weight="1.0"
-                />
+                android:format12Hour="hh:mm:ss a" />
 
         </LinearLayout>
 
@@ -44,19 +48,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
-                <EditText android:id="@+id/edtKilosCargaPasilla"
+
+                <EditText
+                    android:id="@+id/edtKilosCargaPasilla"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Kilos totales de la carga de café pasilla"
-                    android:padding="8dp"
                     android:background="#ffffff"
+                    android:drawableLeft="@drawable/peso"
                     android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/peso"/>
+                    android:hint="Kilos totales de la carga de café pasilla"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -64,18 +71,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText android:id="@+id/edtKilosCargaZarandaPasilla"
+
+                <EditText
+                    android:id="@+id/edtKilosCargaZarandaPasilla"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Kilos resultantes de zaranda"
-                    android:padding="8dp"
                     android:background="#ffffff"
+                    android:drawableLeft="@drawable/peso"
                     android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/peso"/>
+                    android:hint="Kilos resultantes de zaranda"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -83,18 +93,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText android:id="@+id/edtValorPuntoPasilla"
+
+                <EditText
+                    android:id="@+id/edtValorPuntoPasilla"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Valor de punto de la compraventa"
-                    android:padding="8dp"
                     android:background="#ffffff"
+                    android:drawableLeft="@drawable/tara"
                     android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/tara"/>
+                    android:hint="Valor de punto de la compraventa"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -102,16 +115,16 @@
         <!-- Botón de calcular el costo de la carga -->
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnCostoCargaPasilla"
-            android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginTop="24dp"
+            android:layout_gravity="right"
             android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/btnpresionadocalculos"
             android:padding="6dp"
             android:text="Calcular"
-            android:textColor="#ffffff"
-            android:background="@drawable/btnpresionadocalculos"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"
+            android:textColor="#ffffff" />
 
     </LinearLayout>
 

@@ -2,85 +2,83 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:scrollbars="vertical"
-    android:scrollbarAlwaysDrawVerticalTrack="true">
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:scrollbars="vertical">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:weightSum="1">
 
-        <!-- <TextView
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:text="Selecciona tu operación:"
-             android:layout_marginTop="12dp"
-             android:layout_marginLeft="5dp"/>
-
-          <Spinner
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:id="@+id/spinnerC">
-         </Spinner> -->
-
-
+        <!-- Nombre del Cliente -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
-                <EditText android:id="@+id/edtNombreCliente"
+
+                <EditText
+                    android:id="@+id/edtNombreCliente"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:background="#ffffff"
+                    android:drawableLeft="@drawable/nombres"
+                    android:drawablePadding="16dp"
                     android:hint="Nombre del cliente"
-                    android:padding="8dp"
-                    android:background="#ffffff"
-                    android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/nombres"/>
+                    android:inputType="text"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
+        <!-- Cédula del cliente -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText android:id="@+id/edtCedulaCliente"
+
+                <EditText
+                    android:id="@+id/edtCedulaCliente"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
+                    android:background="#ffffff"
+                    android:drawableLeft="@drawable/cedula"
+                    android:drawablePadding="16dp"
                     android:hint="Cédula del cliente"
-                    android:padding="8dp"
-                    android:background="#ffffff"
-                    android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/cedula"/>
+                    android:inputType="number"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
+        <!-- Teléfono del cliente -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText android:id="@+id/edtTelefonoCliente"
+
+                <EditText
+                    android:id="@+id/edtTelefonoCliente"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:hint="Teléfono del cliente"
-                    android:padding="8dp"
                     android:background="#ffffff"
+                    android:drawableLeft="@drawable/telefono"
                     android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/telefono"/>
+                    android:hint="Teléfono del cliente"
+                    android:inputType="number"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
-
+        <!-- Dato del valor a pagar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -88,33 +86,34 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="El valor a pagar es de : $"
-                android:textStyle="bold"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="5dp"/>
+                android:text="El valor a pagar es de : $"
+                android:textStyle="bold" />
+
             <TextView
+                android:id="@+id/tvValorAPagar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text=""
-                android:textStyle="bold"
-                android:id="@+id/tvValorAPagar"
-                android:layout_marginTop="10dp" />
+                android:textStyle="bold" />
         </LinearLayout>
 
-
+        <!-- Botón para generar los datos de la factura -->
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnGenerarFactura"
-            android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginTop="24dp"
+            android:layout_gravity="right"
             android:layout_marginBottom="24dp"
             android:layout_marginRight="5dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/btnpresionadocalculos"
             android:padding="6dp"
             android:text="Generar Factura"
-            android:textColor="#ffffff"
-            android:background="@drawable/btnpresionadocalculos"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"
+            android:textColor="#ffffff" />
 
     </LinearLayout>
 

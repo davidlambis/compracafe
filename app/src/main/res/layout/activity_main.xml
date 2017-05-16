@@ -34,7 +34,7 @@
     </android.support.design.widget.AppBarLayout>
     <!-- Fin de la Appbar -->
 
-    <!-- Inicio del ViewPager -->
+    <!-- Inicio del ViewPager(para los fragmentos) -->
     <android.support.v4.view.ViewPager
         android:id="@+id/ViewPagerPrincipal"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"

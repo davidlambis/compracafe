@@ -1,72 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="@dimen/activity_vertical_margin">
 
-    <!--<TextView
-        android:id="@+id/VoC"
-        android:textColor="#000000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        /> -->
+    <!-- List View para el listado de facturas en los reportes -->
+    <!-- Número de Factura -->
     <TextView
         android:id="@+id/numerofactura"
-        android:textColor="#AFB42B"
-        android:textSize="18dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="#AFB42B"
+        android:textSize="18dp" />
 
+    <!-- Nombre de Compraventa -->
     <TextView
         android:id="@+id/nombrecompraventa"
-        android:textColor="#000000"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
+        android:layout_height="wrap_content"
+        android:textColor="#000000" />
+    <!-- Nit Compraventa -->
     <TextView
         android:id="@+id/nitcompraventa"
-        android:textColor="#000000"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
+        android:layout_height="wrap_content"
+        android:textColor="#000000" />
+    <!-- Ciudad Compraventa -->
     <TextView
         android:id="@+id/ciudad"
-        android:textColor="#000000"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <!-- <TextView
-        android:id="@+id/direccioncompraventa"
-        android:textColor="#000000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="#000000" />
 
-    <TextView
-        android:id="@+id/telefonocompraventa"
-        android:textColor="#000000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/> -->
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-     <TextView
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:textColor="#9E9E9E"
-         android:text="Nombres Usuario : "/>
+        <!-- Nombres del Usuario -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombres Usuario : "
+            android:textColor="#9E9E9E" />
 
-    <TextView
-        android:id="@+id/nombreusuario"
-        android:textColor="#000000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/nombreusuario"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
     </LinearLayout>
 
+    <!-- Apellidos del Usuario -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -75,16 +62,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#9E9E9E"
-            android:text="Apellidos Usuario : "/>
+            android:text="Apellidos Usuario : "
+            android:textColor="#9E9E9E" />
 
         <TextView
             android:id="@+id/apellidousuario"
-            android:textColor="#000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
     </LinearLayout>
 
+    <!-- Tipo de café -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -93,16 +81,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#9E9E9E"
-            android:text="Tipo de café : "/>
+            android:text="Tipo de café : "
+            android:textColor="#9E9E9E" />
 
         <TextView
             android:id="@+id/tipodecafe"
-            android:textColor="#000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
     </LinearLayout>
 
+    <!-- Kilos Totales -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -111,16 +100,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#9E9E9E"
-            android:text="Kilos Totales : "/>
+            android:text="Kilos Totales : "
+            android:textColor="#9E9E9E" />
 
         <TextView
             android:id="@+id/kilostotales"
-            android:textColor="#000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
     </LinearLayout>
 
+    <!-- Valor pagado -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -129,16 +119,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#9E9E9E"
-            android:text="Valor Pagado : "/>
+            android:text="Valor Pagado : "
+            android:textColor="#9E9E9E" />
 
         <TextView
             android:id="@+id/valorpago"
-            android:textColor="#000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
     </LinearLayout>
 
+    <!-- Fecha -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -147,16 +138,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#9E9E9E"
-            android:text="Fecha : "/>
+            android:text="Fecha : "
+            android:textColor="#9E9E9E" />
 
         <TextView
             android:id="@+id/fecha"
-            android:textColor="#000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
     </LinearLayout>
 
+    <!-- Hora -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -165,16 +157,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#9E9E9E"
-            android:text="Hora : "/>
+            android:text="Hora : "
+            android:textColor="#9E9E9E" />
 
         <TextView
             android:id="@+id/hora"
-            android:textColor="#000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
     </LinearLayout>
 
+    <!-- Nombres Cliente -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -183,16 +176,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#9E9E9E"
-            android:text="Nombres Cliente : "/>
+            android:text="Nombres Cliente : "
+            android:textColor="#9E9E9E" />
 
         <TextView
             android:id="@+id/nombrescliente"
-            android:textColor="#000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
     </LinearLayout>
 
+    <!-- Cédula Cliente -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -201,16 +195,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#9E9E9E"
-            android:text="Cédula Cliente : "/>
+            android:text="Cédula Cliente : "
+            android:textColor="#9E9E9E" />
 
         <TextView
             android:id="@+id/cedulacliente"
-            android:textColor="#000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
     </LinearLayout>
 
+    <!-- Teléfono Cliente -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -219,13 +214,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#9E9E9E"
-            android:text="Teléfono Cliente : "/>
+            android:text="Teléfono Cliente : "
+            android:textColor="#9E9E9E" />
 
         <TextView
             android:id="@+id/telefonocliente"
-            android:textColor="#000000"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="#000000" />
     </LinearLayout>
 </LinearLayout>

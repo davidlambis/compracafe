@@ -172,16 +172,6 @@ public class EmpresasController {
         return departamentoEmpresa;
     }
 
-   /*public String findEstadoEmpresaById (Long idEmpresa){
-        dbHelper = new SQLiteDBHelper(context);
-        database = dbHelper.getWritableDatabase();
-        String select ="select * from " +SQLiteDBHelper.TABLE_NAME_EMPRESAS+" where "+ SQLiteDBHelper.COLUMN_ID_EMPRESA+" = '"+idEmpresa+"'";
-        Cursor cursor = database.rawQuery(select,null);
-        if(cursor.moveToFirst()){
-            estadoEmpresa = cursor.getString(cursor.getColumnIndex(SQLiteDBHelper.COLUMN_ESTADO_EMPRESA));
-        }
-        return estadoEmpresa;
-    }*/
 
 
 }

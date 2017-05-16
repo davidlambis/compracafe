@@ -6,13 +6,10 @@ import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Environment;
-import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -62,6 +59,7 @@ import java.util.Date;
 
 public class FacturaActivity extends AppCompatActivity implements OnClickListener {
 
+    //Variables
     public long idUsuario, idVenta, idEmpresa, idCliente;
     public String nombresUsuario, apellidosUsuario, tipo, kilosTotalesSeco, valorPagoSeco, nombreEmpresa, nombresCliente, cedulaCliente, telefonoCliente, direccionCliente, fecha, hora, fechahora, direccionEmpresa, telefonoEmpresa, kilosTotalesVerde, valorPagoVerde, kilosTotalesPasilla, valorPagoPasilla, strValorPagoSecoIva, strValorPagoVerdeIva, strValorPagoPasillaIva, kilosTotales, valorPago, nitEmpresa, VoC, fecha1, ciudadEmpresa, departamentoEmpresa;
     private TextView tvVoC, factura, facturaCompraventa, facturaVendedor, facturaTipoCafe, facturaKilosTotales, facturaValorTotal, facturaNombreCliente, facturaCedulaCliente, facturaTelefonoCliente, facturaDireccionCliente, facturaCiudad, facturaDepartamento;
@@ -69,6 +67,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
     private double valorPagoSecoIva, valorPagoVerdeIva, valorPagoPasillaIva, doubleValorPagoSeco, doubleValorPagoVerde, doubleValorPagoPasilla;
 
 
+    // Permisos para Api 23
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -87,13 +86,14 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_factura);
 
+        //Coloca título al toolbar y habilita el retorno a la actividad anterior
         Toolbar toolbar = (Toolbar) findViewById(R.id.ToolbarFactura);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setTitle("DATOS DE LA FACTURA");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+        //Si debe pedir permisos, para el caso de API 23 en adelante
         if (shouldAskPermissions()) {
             askPermissions();
         }
@@ -105,12 +105,11 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         db_facturas = new FacturasController(this);
         db_facturas.abrirBaseDeDatos();
 
-        //tvVoC = (TextView) findViewById(R.id.tvVoC);
-        //factura = (TextView) findViewById(R.id.factura);
+
+        //Llamado a objetos del layout
         facturaNombreCliente = (TextView) findViewById(R.id.tvNombreCliente);
         facturaCedulaCliente = (TextView) findViewById(R.id.tvCedulaCliente);
         facturaTelefonoCliente = (TextView) findViewById(R.id.tvTelefonoCliente);
-        //facturaDireccionCliente = (TextView)findViewById(R.id.tvDireccionCliente);
         facturaCompraventa = (TextView) findViewById(R.id.facturaCompraventa);
         facturaVendedor = (TextView) findViewById(R.id.facturaVendedor);
         facturaTipoCafe = (TextView) findViewById(R.id.facturaTipoCafe);
@@ -120,9 +119,10 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         facturaDepartamento = (TextView) findViewById(R.id.facturaDepartamento);
         btnFacturaImprimir = (Button) findViewById(R.id.btnFacturaImprimir);
 
-
+        //Listener del botón de imprimir factura
         btnFacturaImprimir.setOnClickListener(this);
 
+        //Obtiene los datos que provienen de alguno de los fragmentos
         idUsuario = getIntent().getExtras().getLong("idUsuario");
         idVenta = getIntent().getExtras().getLong("idVenta");
         nombresUsuario = getIntent().getExtras().getString("nombresUsuario");
@@ -138,34 +138,33 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         nombresCliente = getIntent().getExtras().getString("nombresCliente");
         cedulaCliente = getIntent().getExtras().getString("cedulaCliente");
         telefonoCliente = getIntent().getExtras().getString("telefonoCliente");
-        //direccionCliente = getIntent().getExtras().getString("direccionCliente");
 
+
+        //Obtención del dato de la fecha y hora que proviene del proceso de compra
         fecha1 = getIntent().getExtras().getString("fecha");
         DateFormat dateFormatFH = new SimpleDateFormat("MM-dd-yyyy");
         Date dateFH = new Date(fecha1);
         fecha = dateFormatFH.format(dateFH);
         hora = getIntent().getExtras().getString("hora");
         fechahora = getIntent().getExtras().getString("fechahora");
-        //VoC = getIntent().getExtras().getString("VoC");
-        //Seco
+
+        //Datos de café Seco
         kilosTotalesSeco = getIntent().getExtras().getString("kilosTotalesSeco");
         valorPagoSeco = getIntent().getExtras().getString("valorPagoSeco");
         doubleValorPagoSeco = getIntent().getExtras().getDouble("doubleValorPagoSeco");
-        //Verde
+        //Datos de café Verde
         kilosTotalesVerde = getIntent().getExtras().getString("kilosTotalesVerde");
         valorPagoVerde = getIntent().getExtras().getString("valorPagoVerde");
         doubleValorPagoVerde = getIntent().getExtras().getDouble("doubleValorPagoVerde");
-        //Pasilla
+        //Datos de café Pasilla
         kilosTotalesPasilla = getIntent().getExtras().getString("kilosTotalesPasilla");
         valorPagoPasilla = getIntent().getExtras().getString("valorPagoPasilla");
         doubleValorPagoPasilla = getIntent().getExtras().getDouble("doubleValorPagoPasilla");
 
-        //factura.setText("Datos de la Factura");
-        //tvVoC.setText("Proceso:" + VoC);
+        //Asigna el texto de los datos a cada textView
         facturaNombreCliente.setText(nombresCliente);
         facturaCedulaCliente.setText(cedulaCliente);
         facturaTelefonoCliente.setText(telefonoCliente);
-        //facturaDireccionCliente.setText(direccionCliente);
         facturaCompraventa.setText(nombreEmpresa);
         facturaDepartamento.setText(departamentoEmpresa);
         facturaCiudad.setText(ciudadEmpresa);
@@ -198,34 +197,15 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         }
         kilosTotales = facturaKilosTotales.getText().toString();
         valorPago = facturaValorTotal.getText().toString();
-        /*SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString("tipo",tipo);
-        if(tipo.equals("café seco")){
-          editor.putString("kilosTotales",kilosTotalesSeco);
-          editor.putString("valorPago",valorPagoSeco);
-        }
-        if(tipo.equals("café verde")){
-            editor.putString("kilosTotales",kilosTotalesVerde);
-            editor.putString("valorPago",valorPagoVerde);
-        }
-        if(tipo.equals("café pasilla")){
-            editor.putString("kilosTotales",kilosTotalesPasilla);
-            editor.putString("valorPago",valorPagoPasilla);
-        }
-        editor.putString("fecha",fecha);
-        editor.putString("hora",hora);
-        editor.commit();*/
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        //Para el botón de retorno a la atividad anterior
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                //shouldUpRecreateTask(new Intent(this,MainActivity.class));
                 break;
         }
 
@@ -238,19 +218,20 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
             String strFacturaKilosTotales = facturaKilosTotales.getText().toString();
             String strFacturaValorTotal = facturaValorTotal.getText().toString();
 
+
             idCliente = db_clientes.idClienteByNombre(cedulaCliente);
 
-            //Toast.makeText(this, "fecha:"+fecha, Toast.LENGTH_SHORT).show();
+            //Inserta datos en la tabla de facturas
             db_facturas.insertDataFacturas(idVenta, idCliente, null, nombreEmpresa, nombresUsuario, apellidosUsuario, tipo, strFacturaKilosTotales, strFacturaValorTotal, fecha, nitEmpresa, nombresCliente, cedulaCliente, telefonoCliente, hora, departamentoEmpresa, ciudadEmpresa); //VOC NULL
-            //Toast.makeText(this, "Ciudad empresa:"+ciudadEmpresa, Toast.LENGTH_LONG).show();
+            //Ejecuta la tarea asíncrona
             new CargarDatosHistoria().execute("http://iot.bitnamiapp.com:3000/factura");
-            //First Check if the external storage is writable
+            //Revisa si el almacenamiento externo tiene espacio
             String state = Environment.getExternalStorageState();
             if (!Environment.MEDIA_MOUNTED.equals(state)) {
                 Toast.makeText(this, "Activar almacenamiento externo", Toast.LENGTH_SHORT).show();
             }
 
-            //Create a directory for your PDF
+            //Crea un directorio para el pdf
             File pdfDir = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS), "FACTURAS");
             if (!pdfDir.exists()) {
@@ -261,9 +242,11 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
             File pdfFile = new File(pdfDir, "Factura.pdf");
 
             try {
+                //Crea un documento
                 Document document = new Document();
-
+                //Obtiene la instancia del PDF
                 PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
+                //abre el documento
                 document.open();
 
                 addMetaData(document);
@@ -273,14 +256,14 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
                 e.printStackTrace();
             }
 
-            //Abrir el pdf
+            //Abre el pdf y lo guarda en el directorio especificado
             Intent intent = new Intent(Intent.ACTION_VIEW);
             Uri uri = Uri.fromFile(new File(pdfDir, "Factura.pdf"));
             intent.setDataAndType(uri, "application/pdf");
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
 
-            //Enviar correo
+            //Despliega las formas de almacenamiento(Drive,correo,..)
             Intent email = new Intent(Intent.ACTION_SEND);
             email.putExtra(Intent.EXTRA_EMAIL, "");
             email.putExtra(Intent.EXTRA_SUBJECT, "Factura");
@@ -293,7 +276,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
 
             finish();
         } else {
-            //Se muestra un alert dialog que indica que los datos son erróneos
+            //Se muestra un alert dialog que indica que no hay acceso a internet
             final AlertDialog.Builder builder = new AlertDialog.Builder(FacturaActivity.this);
             builder.setTitle("Alerta");
             builder.setMessage("No hay conexión a internet, por favor busca un acceso a internet");
@@ -326,6 +309,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         return false;
     }
 
+    //Hace un POST pasando todos los datos obtenidos para la factura
     private String downloadUrl(String myurl) throws IOException {
         InputStream is = null;
         Log.i("URl", "" + myurl);
@@ -394,7 +378,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         }
     }
 
-    // Reads an InputStream and converts it to a String.
+    // Lee un inputStream y lo convierte en String
     public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
@@ -403,6 +387,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         return new String(buffer);
     }
 
+    //La tarea asíncrona ejecuta la subida de todos los datos a la nube.
     private class CargarDatosHistoria extends AsyncTask<String, Void, String> {
 
         ProgressDialog progressDialog;
@@ -428,43 +413,12 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         @Override
         protected void onPostExecute(String result) {
             progressDialog.dismiss();
-            //TODO cuando el internet está mal, hacer un temporizador para que no generé la detención de la app.
-            /*JSONArray ja= null;
-            try {
-                // ja=new JSONArray(result);
-                /// Toast.makeText(Informacion2.this, "Cargando..."+ja, Toast.LENGTH_LONG).show();
-                /// descripcionInforacion.setText(ja.getString(1));
-
-
-                ///Recive en json array si la respuesta es Array
-                JSONArray jsonArray = new JSONArray(new String(result));
-                /// textViewHistoria.setText(jsonArray.toString());
-                textViewHistoria.setText(jsonArray.toString());
-
-
-                ///Recorrer Json Array para obtener informacion
-                /*
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    textViewHistoria.setText(jsonArray.getJSONObject(i).getString("_id"));
-                    txtTituloHistoria.setText(jsonArray.getJSONObject(i).getString("Nombre_Compraventa"));
-              /////      titulos.add(jsonArray.getJSONObject(i).getString("titulo"));
-
-                   /// Toast.makeText(Informacion2.this, "Cargando..."+jsonArray.getJSONObject(i).getString("titulo"), Toast.LENGTH_LONG).show();
-
-
-                }*/
-            /*
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            ///       textView.setText(result);
-
-
-        }*/
         }
     }
 
-    // Set PDF document Properties
+
+    //CREACIÓN DEL PDF
+    // Asigna propiedades del PDF
     public void addMetaData(Document document) {
         document.addTitle("FACTURA");
         document.addSubject("Info factura");
@@ -474,21 +428,21 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
     }
 
     public void addTitlePage(Document document) throws DocumentException {
-        // Font Style for Document
+        // Estilo de la fuente para el documento
         Font catFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
         Font normal1 = new Font(Font.FontFamily.HELVETICA, 14, Font.NORMAL);
         Font titleFont = new Font(Font.FontFamily.HELVETICA, 22, Font.BOLD, BaseColor.GRAY);
         Font smallBold = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
         Font MediumBold = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
         Font normal2 = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
-        // Start New Paragraph
+        // Inicia un nuevo párrafo
         Paragraph prHead = new Paragraph();
-        // Set Font in this Paragraph
+        // Asigna la fuente para este párrafo
         prHead.setFont(titleFont);
-        // Add item into Paragraph
+        // Añade un item en el párrafo
         prHead.add("FACTURA\n");
         float[] columnWidths = new float[]{200f, 200f};
-        // Create New Cell into Table
+        // Crea una nueva celda dentro de la tabla
         prHead.setFont(normal1);
         prHead.add("\nFecha: " + fecha + " " + hora + "\n");
         //prHead.add("\nProceso: " + VoC + "\n");
@@ -510,10 +464,10 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         // Add all above details into Document
         document.add(prHead);
         /////TABLA/////
-        // Create Table into Document with 2 Row
+        // Crea tabla en el documento con 2 filas
         PdfPTable table = new PdfPTable(2);
         table.setWidths(columnWidths);
-        // 100.0f mean width of table is same as Document size
+        // 100.0f significa que el ancho de la tabla es igual al del documento
         table.setWidthPercentage(100.0f);
         table.setHorizontalAlignment(Element.ALIGN_LEFT);
         Paragraph prDatos = new Paragraph("Datos");
@@ -614,7 +568,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
         document.newPage();
     }
 
-
+    //Métodos para solicitar permisos para Api 23 en adelante
     protected boolean shouldAskPermissions() {
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
     }
@@ -630,6 +584,7 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
     }
 
 
+    //Restringe el retorno a la actividad anterior mediante el botón de retorno del móvil
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -642,4 +597,3 @@ public class FacturaActivity extends AppCompatActivity implements OnClickListene
 }
 
 
-//TODO PASAR EL PARÁMETRO DE VOC(VENDE O COMPRA) Y LOS DATOS DEL CLIENTE AL WEBSERVICE, MIRAR PARTE ADMINISTRATIVA DE LA APP

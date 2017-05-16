@@ -10,7 +10,7 @@ import com.example.user.comprarcafe.Database.SQLiteDBHelper;
 import com.example.user.comprarcafe.Models.Factura;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class FacturasController {
     private SQLiteDBHelper dbHelper;
@@ -54,21 +54,6 @@ public class FacturasController {
         long id = database.insert(SQLiteDBHelper.TABLE_NAME_FACTURAS,null,values);
     }
 
-
-    //Método para listar todas las empresas
-    /*public List<String> findFacturasByFecha(String nit,String fecha){
-        dbHelper = new SQLiteDBHelper(context);
-        database = dbHelper.getWritableDatabase();
-        List<String> arrayList = new ArrayList<String>();
-        String select = "select * from "+SQLiteDBHelper.TABLE_NAME_FACTURAS+" where "+SQLiteDBHelper.COLUMN_NIT_EMPRESA+" = '"+nit+"'"+" AND "+SQLiteDBHelper.COLUMN_FECHA_FACTURA+" = '"+fecha+"'";
-        Cursor c = database.rawQuery(select,null);
-        while(c.moveToNext()){
-            arrayList.add(c.getString(c.getColumnIndex("nombreEmpresa")));
-            arrayList.add(c.getString(c.getColumnIndex("tipoCafe")));
-        }
-        c.close();
-        return arrayList;
-    } */
 
     public ArrayList<Factura> findFacturasByFechaAndNit(String nit,String fecha) {
 

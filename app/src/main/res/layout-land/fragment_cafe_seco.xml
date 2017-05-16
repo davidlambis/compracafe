@@ -1,41 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:orientation="vertical"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:paddingRight="24dp"
+        android:paddingTop="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+            <!-- Fecha -->
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/tvFechaSeco"
-                android:text = "Fecha : "/>
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:id="@+id/fechaSeco"/>
+                android:text="Fecha : " />
+
             <TextView
+                android:id="@+id/fechaSeco"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <!-- Hora -->
+            <TextView
                 android:id="@+id/tvHoraSeco"
-                android:text = "Hora : "/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hora : " />
+
             <TextClock
                 android:id="@+id/textClockSeco"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:format12Hour="hh:mm:ss a"
                 android:layout_weight="1.0"
-                />
+                android:format12Hour="hh:mm:ss a" />
 
         </LinearLayout>
 
@@ -44,19 +50,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
-                <EditText android:id="@+id/edtKilosCargaSeco"
+
+                <EditText
+                    android:id="@+id/edtKilosCargaSeco"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Kilos totales de la carga de café seco"
-                    android:padding="8dp"
                     android:background="#ffffff"
+                    android:drawableLeft="@drawable/peso"
                     android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/peso"/>
+                    android:hint="Kilos totales de la carga de café seco"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -64,18 +73,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText android:id="@+id/edtPrecioCargaDiaSeco"
+
+                <EditText
+                    android:id="@+id/edtPrecioCargaDiaSeco"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Precio de la carga de café seco del día"
-                    android:padding="8dp"
                     android:background="#ffffff"
+                    android:drawableLeft="@drawable/precio"
                     android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/precio"/>
+                    android:hint="Precio de la carga de café seco del día"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -83,18 +95,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText android:id="@+id/edtGramosCafeBuenoSeco"
+
+                <EditText
+                    android:id="@+id/edtGramosCafeBuenoSeco"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Gramos de café bueno"
-                    android:padding="8dp"
                     android:background="#ffffff"
+                    android:drawableLeft="@drawable/peso"
                     android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/peso"/>
+                    android:hint="Gramos de café bueno"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -102,18 +117,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText android:id="@+id/edtTara"
+
+                <EditText
+                    android:id="@+id/edtTara"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Tara"
-                    android:padding="8dp"
                     android:background="#ffffff"
+                    android:drawableLeft="@drawable/tara"
                     android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/tara"/>
+                    android:hint="Tara"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -121,16 +139,16 @@
         <!-- Botón de calcular el costo de la carga -->
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnCostoCargaSeco"
-            android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginTop="24dp"
+            android:layout_gravity="right"
             android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/btnpresionadocalculos"
             android:padding="6dp"
             android:text="Calcular"
-            android:textColor="#ffffff"
-            android:background="@drawable/btnpresionadocalculos"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"/>
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"
+            android:textColor="#ffffff" />
 
 
     </LinearLayout>

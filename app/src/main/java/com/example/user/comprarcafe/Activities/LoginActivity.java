@@ -1,10 +1,8 @@
 package com.example.user.comprarcafe.Activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -13,7 +11,6 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View.OnClickListener;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +23,6 @@ import com.example.user.comprarcafe.Controllers.UsuariosController;
 import com.example.user.comprarcafe.Models.Empresa;
 import com.example.user.comprarcafe.Models.Usuario;
 import com.example.user.comprarcafe.R;
-import com.example.user.comprarcafe.SessionManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,8 +41,7 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
 
 
 public class LoginActivity extends AppCompatActivity implements OnClickListener{
@@ -62,34 +57,30 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
     SQLiteDatabase db;
     Cursor cursor;
 
-    private String estado_sesion_logued,nombres_usuario_logued, apellidos_usuario_logued,direccion_usuario_logued,correo_usuario_logued,contraseña_usuario_logued,estado_sesion, _nombres,_apellidos,nombreEmpresa,direccionEmpresa,telefonoEmpresa,nitEmpresa,estadoEmpresa,nit;
-    public int cedula_usuario_logued,telefono_usuario_logued;
-    private long id_usuario_logued,_id,idEmpresa;
+    private String estado_sesion;
+    private long idEmpresa;
 
+    //Llamado de controladores
     UsuariosController db_usuarios;
     EmpresasController db_empresas;
 
-    ///
+
+    ///Variables
     ProgressDialog pDialog;
     int length;
     String strCorreo,strContraseña;
     String Id_Empresa,Nombres_Usuario,Apellidos_Usuario,Cedula_Usuario,Direccion_Usuario,Telefono_Usuario,Correo_Usuario,Contrasena_Usuario,tipoCafe,Estado_Sesion,Nombre_Empresa,Nit_Empresa,Direccion_Empresa,Telefono_Empresa,Departamento_Empresa,Ciudad_Empresa;
     ArrayList<Empresa> numero_empresas;
 
-    //SESSION MANAGER
-    //SessionManager session;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        // Session Manager
-        /*session = new SessionManager(getApplicationContext());
-        Toast.makeText(getApplicationContext(), "User Login Status login: " + session.isLoggedIn(), Toast.LENGTH_LONG).show();
-        session.checkLoginl();*/
 
-
+        //Llamado de objetos del layout
         edtCorreo = (EditText)findViewById(R.id.edtCorreo);
         edtContraseña = (EditText)findViewById(R.id.edtContraseña);
         btnIniciarSesion = (Button)findViewById(R.id.btnIniciarSesion);
@@ -111,52 +102,16 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
         db_empresas = new EmpresasController(this);
         db_empresas.abrirBaseDeDatos();
 
-      /*  usuarios= db_usuarios.loadUsuarios();
-        if(usuarios.size()!= 0) {
-            verificar_estado_sesion();
-        } */
+
     }
 
-    /* private void verificar_estado_sesion() {
-        listToDo();
-        if(estado_sesion_logued.equals("1")) {
-                enviardatos();
-        }
-    }
-
-    private void enviardatos(){
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("id", _id);
-        intent.putExtra("nombres", _nombres);
-        intent.putExtra("apellidos", _apellidos);
-        intent.putExtra("idEmpresa", idEmpresa);
-        intent.putExtra("id_usuario_logued",id_usuario_logued);
-        intent.putExtra("nombres_usuario_logued",nombres_usuario_logued);
-        intent.putExtra("apellidos_usuario_logued",apellidos_usuario_logued);
-        intent.putExtra("cedula_usuario_logued",cedula_usuario_logued);
-        intent.putExtra("direccion_usuario_logued",direccion_usuario_logued);
-        intent.putExtra("telefono_usuario_logued",telefono_usuario_logued);
-        intent.putExtra("correo_usuario_logued",correo_usuario_logued);
-        intent.putExtra("contraseña_usuario_logued",contraseña_usuario_logued);
-        intent.putExtra("estado_sesion_logued",estado_sesion_logued);
-        id_usuario_logued = 0;
-        nombres_usuario_logued = "";
-        apellidos_usuario_logued = "";
-        cedula_usuario_logued = 0;
-        direccion_usuario_logued = "";
-        telefono_usuario_logued = 0;
-        correo_usuario_logued= "";
-        contraseña_usuario_logued = "";
-        estado_sesion = "";
-        edtCorreo.setText("");
-        edtContraseña.setText("");
-        startActivity(intent);
-    } */
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //En caso de que el usuario haga click en botón de iniciar sesión.
             case R.id.btnIniciarSesion:
+                    //Valida que los campos estén diligenciados
                     strCorreo = edtCorreo.getText().toString();
                     if (TextUtils.isEmpty(strCorreo)) {
                         edtCorreo.setError("Llena este campo");
@@ -167,78 +122,27 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
                         edtContraseña.setError("Llena este campo");
                         return;
                     }
-
-
-                    //Hacer llamado al cursor para hacer la consulta en la base de datos
-
-                    //TODO VALIDAR LOGIN EN LA NUBE
-                    /*cursor = db_usuarios.validarLogin(strCorreo,strContraseña);
-                    if (cursor != null) {
-                        //Si el cursor retorna más de cero, ha encontrado respuesta
-                        if (cursor.getCount() > 0) {
-                            cursor.moveToFirst();
-                                _id = db_usuarios.idUsuarioByCorreo(strCorreo);
-                                _nombres= db_usuarios.nombresUsuarioByCorreo(strCorreo);
-                                _apellidos=db_usuarios.apellidosUsuarioByCorreo(strCorreo);
-                                idEmpresa = db_usuarios.idEmpresaByCorreo(strCorreo);
-                                nitEmpresa = db_empresas.findNitEmpresaById(idEmpresa);
-                                direccionEmpresa = db_empresas.findDireccionEmpresaById(idEmpresa);
-                                telefonoEmpresa = db_empresas.findTelefonoEmpresaById(idEmpresa);
-                                nombreEmpresa = db_empresas.findNombreEmpresaById(idEmpresa);
-
-                                estadoEmpresa = db_empresas.findEstadoEmpresaById(idEmpresa);
-                                if(estadoEmpresa.equals("0")){
-                                    if(isOnlineNet()){
-                                        new CargarDatosHistoria().execute("http://iot.bitnamiapp.com:3000/unidad_productiva_nit");
-                                        new CargarDatosHistoriaP().execute("http://iot.bitnamiapp.com:3000/unidad_productiva");
-                                    }
-                                }
-                                    //Toast.makeText(this,"idusuario:"+_id+"nombresUsuario:"+_nombres+"apellidosUsuario:"+_apellidos+"idEmpresa:"+idEmpresa,Toast.LENGTH_LONG).show();
-                                Toast.makeText(this, "Inicio de sesión exitoso por sqlite", Toast.LENGTH_SHORT).show();
-                                Intent i = new Intent(LoginActivity.this,MainActivity.class);
-                                i.putExtra("id",_id);
-                                i.putExtra("nombres",_nombres);
-                                i.putExtra("apellidos",_apellidos);
-                                i.putExtra("idEmpresa",idEmpresa);
-                                startActivity(i);
-                                /* String Estado_Sesion="1";
-                                db_usuarios.actualizarUsuario(id_usuario_logued, Estado_Sesion);
-                                enviardatos();
-
-
-                        }else{ */
+                    // Ejecuta la tarea asíncrona
                             new GetLogin().execute();
-                        //} // Si el cursor no encuentra respuesta
-                        /*else {
-                            //Se muestra un alert dialog que indica que los datos son erróneos
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                            builder.setTitle("Alerta");
-                            builder.setMessage("Usuario o Contraseña incorrectos");
-                            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
-                        }*/
 
                     break;
-
+            //En caso de que el usuario haga click en el botón de registrar empresa.
             case R.id.btnRegistrarEmpresa :
+                //Llamado a función que valida que haya internet
                 if(isOnlineNet()) {
+                    //Almacena en un arraylist el listado de empresas que encuentre en la base de datos sqlite
                     ArrayList<Empresa> numero_empresas  = db_empresas.findAllEmpresas();
+                    //Si el tamaño del array es mayor que 0 quiere decir que ya hay una empresa registrada(solo se permite una por dispositivo)
                     if(numero_empresas.size() > 0){
                         Toast.makeText(this,"Ya hay una empresa registrada en este dispositivo",Toast.LENGTH_SHORT).show();
                     }else {
+                        //De lo contrario ingresa a la actividad RegisterActivityEmpresa
                         Intent i = new Intent(this, RegisterActivityEmpresa.class);
                         startActivity(i);
                         Toast.makeText(this, "Ingresa datos de la compraventa", Toast.LENGTH_SHORT).show();
                     }
                 }else{
-                    //Se muestra un alert dialog que indica que los datos son erróneos
+                    //Si no hay internet, aparece un diálogo
                     final AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                     builder.setTitle("Alerta");
                     builder.setMessage("No hay conexión a internet, por favor busca un acceso a internet");
@@ -253,17 +157,21 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
                     dialog.show();
                 }
                 break;
+            //En caso de que el usuario haga click en el botón de registrar usuario.
             case R.id.btnRegistrarUsuario :
                 ArrayList<Empresa> numero_empresas  = db_empresas.findAllEmpresas();
+                //Si no hay una empresa registrada , redirige a la pantalla de registro de empresa
                 if(numero_empresas.size() == 0) {
                     Toast.makeText(this, "Primero, registra una compraventa", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(this, RegisterActivityEmpresa.class);
                     startActivity(i);
                 }else {
                     ArrayList<Usuario> numero_usuarios = db_usuarios.findAllUsuarios();
+                    // Si hay un usuario registrado en el dispositivo no permite registrar otro
                     if (numero_usuarios.size() > 0) {
                         Toast.makeText(this, "Ya hay un usuario registrado en este dispositivo", Toast.LENGTH_SHORT).show();
                     }else {
+                        //De lo contrario, procede a la pantalla de registro de datos de usuario
                         Intent j = new Intent(this, RegisterActivityUsuario.class);
                         startActivity(j);
                         Toast.makeText(this, "Ingresa tus datos de usuario", Toast.LENGTH_SHORT).show();
@@ -274,6 +182,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
 
     }
 
+    //Método para validar la conexión a internet
     public Boolean isOnlineNet() {
 
         try {
@@ -290,39 +199,9 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
         return false;
     }
 
-    private void listToDo(){
-        for (Usuario usuario : usuarios){
-            Usuario usuario1 = new Usuario();
-            usuario1.setIdUsuario(usuario.getIdUsuario());
-            usuario1.setNombres(usuario.getNombres());
-            usuario1.setApellidos(usuario.getApellidos());
-            usuario1.setIdEmpresa(usuario.getIdEmpresa());
-            usuario1.setCedula(usuario.getCedula());
-            usuario1.setDireccion(usuario.getDireccion());
-            usuario1.setTelefono(usuario.getTelefono());
-            usuario1.setCorreo(usuario.getCorreo());
-            usuario1.setContraseña(usuario.getContraseña());
-            usuario1.setEstadoSesion(usuario.getEstadoSesion());
-
-            _id = usuario.getIdUsuario();
-            _nombres = usuario.getNombres();
-            _apellidos = usuario.getApellidos();
-            idEmpresa = usuario.getIdEmpresa();
-            id_usuario_logued = usuario.getIdUsuario();
-            nombres_usuario_logued = usuario.getNombres();
-            apellidos_usuario_logued = usuario.getApellidos();
-            cedula_usuario_logued = usuario.getCedula();
-            direccion_usuario_logued = usuario.getDireccion();
-            telefono_usuario_logued = usuario.getTelefono();
-            correo_usuario_logued = usuario.getCorreo();
-            contraseña_usuario_logued = usuario.getContraseña();
-            estado_sesion_logued = usuario.getEstadoSesion();
-
-        }
-    }
-
 
 /////////
+    //Tarea asíncrona para traer datos del usuario de la nube.
     private class GetLogin extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
@@ -336,12 +215,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
 
         @Override
         protected Void doInBackground(Void... arg0) {
+            //Dirección Url del servicio
             String jsonStr = makeServiceCallLogin("http://iot.bitnamiapp.com:3000/usuario_correo_contrasena");
 
             if (jsonStr != null) {
                 try {
                     JSONArray jsonArray = new JSONArray(jsonStr);
+                    //Tamaño del array
                     length = jsonArray.length();
+                    //Trae todos los datos almacenados en la nube, de acuerdo al correo y contraseña ingresado
                     for(int i=0; i<length; i++) {
                         JSONObject c = jsonArray.getJSONObject(i);
                         Id_Empresa = c.getString("Id_Empresa");
@@ -378,15 +260,14 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
     protected void onPostExecute(Void result) {
         super.onPostExecute(result);
         pDialog.dismiss();
+        //Si el tamaño del array es cero quiere decir que el correo o contraseña ingresados están incorrectos
         if (length == 0) {
             Toast.makeText(LoginActivity.this,"Usuario o contraseña incorrectos",Toast.LENGTH_SHORT).show();
         }else {
-            //session.createLoginSession(Correo_Usuario,Contrasena_Usuario);
+            //Inicia la MainActivity , guarda los datos en sqlite y pasa todos ellos a la siguiente actividad
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             Toast.makeText(getApplicationContext(),"Inicio de sesión exitoso",Toast.LENGTH_SHORT).show();
             db_usuarios.InsertDataUsuarios(idEmpresa, Nombres_Usuario, Apellidos_Usuario, Cedula_Usuario, Direccion_Usuario, Telefono_Usuario, Correo_Usuario, Contrasena_Usuario, estado_sesion);
-            //long id_Empresa = Long.valueOf(Id_Empresa);
-            //i.putExtra("idEmpresa", id_Empresa);
             i.putExtra("nombres", Nombres_Usuario);
             i.putExtra("apellidos", Apellidos_Usuario);
             i.putExtra("Cedula_Usuario", Cedula_Usuario);
@@ -407,6 +288,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
     }
 
 }
+    //Método para hacer una petición POST que permita mediante el correo y contraseña ingresados por el usuario , traer la información almacenada en la nube, mediante el servicio que ha sido creado.
     public String makeServiceCallLogin(String reqUrl) {
         String response = null;
         try {
@@ -443,6 +325,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
     }
 
 
+    //Método llamado en la petición POST
     private String convertStreamToString(InputStream is) {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();

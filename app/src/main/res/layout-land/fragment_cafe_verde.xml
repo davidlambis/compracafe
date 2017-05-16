@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
+        android:orientation="vertical"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:paddingRight="24dp"
+        android:paddingTop="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+        <!-- Fecha -->
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/tvFechaVerde"
-                android:text = "Fecha : "/>
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.0"
-                android:id="@+id/fechaVerde"/>
+                android:text="Fecha : " />
+
             <TextView
+                android:id="@+id/fechaVerde"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+        <!-- Hora -->
+            <TextView
                 android:id="@+id/tvHoraVerde"
-                android:text = "Hora : "/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hora : " />
+
             <TextClock
                 android:id="@+id/textClockVerde"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:format12Hour="hh:mm:ss a"
                 android:layout_weight="1.0"
-                />
+                android:format12Hour="hh:mm:ss a" />
 
         </LinearLayout>
 
@@ -43,19 +48,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
-                <EditText android:id="@+id/edtKilosCargaVerde"
+
+                <EditText
+                    android:id="@+id/edtKilosCargaVerde"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Kilos totales de la carga de café verde"
-                    android:padding="8dp"
                     android:background="#ffffff"
+                    android:drawableLeft="@drawable/peso"
                     android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/peso"/>
+                    android:hint="Kilos totales de la carga de café verde"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -63,18 +71,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText android:id="@+id/edtPrecioCargaDiaVerde"
+
+                <EditText
+                    android:id="@+id/edtPrecioCargaDiaVerde"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Precio de la carga de café verde del día"
-                    android:padding="8dp"
                     android:background="#ffffff"
+                    android:drawableLeft="@drawable/precio"
                     android:drawablePadding="16dp"
-                    android:drawableLeft="@drawable/precio"/>
+                    android:hint="Precio de la carga de café verde del día"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -82,19 +93,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <EditText android:id="@+id/edtGramosCafeMaloVerde"
+
+                <EditText
+                    android:id="@+id/edtGramosCafeMaloVerde"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:hint="Gramos de café malo"
-                    android:padding="8dp"
                     android:background="#ffffff"
-                    android:drawablePadding="16dp"
                     android:drawableLeft="@drawable/peso"
-                    />
+                    android:drawablePadding="16dp"
+                    android:hint="Gramos de café malo"
+                    android:inputType="numberDecimal"
+                    android:padding="8dp" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
 
@@ -102,17 +115,16 @@
         <!-- Botón de calcular el costo de la carga -->
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btnCostoCargaVerde"
-            android:layout_gravity="right"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginTop="24dp"
+            android:layout_gravity="right"
             android:layout_marginBottom="24dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/btnpresionadocalculos"
             android:padding="6dp"
             android:text="Calcular"
-            android:textColor="#ffffff"
-            android:background="@drawable/btnpresionadocalculos"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"/>
-
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Widget.Button"
+            android:textColor="#ffffff" />
 
 
     </LinearLayout>
